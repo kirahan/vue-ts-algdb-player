@@ -20,10 +20,14 @@
         cols=6
         v-for="(puzzle,index) in data" :key="index"
          >
+          <v-hover
+                            v-slot:default="{ hover }"
+                            open-delay=100
+                         >
            <v-card 
             class="mx-auto"
             max-width="300"
-            elevation=10
+            :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(puzzle.shortName)"
           >
@@ -36,6 +40,7 @@
 
             <v-card-title class="display-1 font-weight-black justify-center align-center" >{{puzzle.name}}</v-card-title>
           </v-card>
+          </v-hover>
         </v-col>
         </v-row>
        </v-col>
@@ -47,6 +52,13 @@
 <script lang='ts'>
 // @ is an alias to /src
 import Vue from 'vue'
+import {
+  State,
+  Getter,
+  Action,
+  Mutation,
+  namespace
+} from 'vuex-class'
 import Component from 'vue-class-component'
 // import ddddd from '../index'
 
@@ -54,10 +66,16 @@ import Component from 'vue-class-component'
 @Component({})
 export default class Puzzles extends Vue{
   data = {}
+
+  @State Navigation
+  @Action setNavigation
+
+
   async fetch(){
     const res22 = await this.$http.get('algdb/puzzles/222')
     const res33 = await this.$http.get('algdb/puzzles/333')
     this.data = [res22.data,res33.data]
+    
   }
 
   gotopage(puzzleshortname: string){
@@ -65,6 +83,8 @@ export default class Puzzles extends Vue{
   }
   created(){
     this.fetch()
+    const nav: object[] = []
+    this.setNavigation(nav)
   }
 }
 

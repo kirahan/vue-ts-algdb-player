@@ -20,13 +20,13 @@ const routes = [
     props:true,
   },
   {
-    path:'/casegroup/:setname',
+    path:'/:puzzle/casegroup/:setname',
     name:'casegroup',
     component: showCaseGroup,
     props:true,
   },
   {
-    path:'/case/:casename',
+    path:'/:puzzle/:group/case/:casename',
     name:'case',
     component: showCase,
     props:true,

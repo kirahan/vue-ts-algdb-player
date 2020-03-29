@@ -35,10 +35,14 @@
         sm=3
         v-for="(caseGroup,index) in caseGroups" :key="index"
          >
+         <v-hover
+                            v-slot:default="{ hover }"
+                            open-delay=100
+                         >
            <v-card 
             class="mx-auto"
             max-width="200"
-            elevation=10
+            :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(caseGroup.shortName)"
           >
@@ -54,6 +58,7 @@
             :style="titlestyle"
             >{{caseGroup.name}}</v-card-title>
           </v-card>
+         </v-hover>
         </v-col>
         </v-row>
        </v-col>
@@ -64,6 +69,13 @@
 
 <script lang='ts'>
 import Vue from 'vue'
+import {
+  State,
+  Getter,
+  Action,
+  Mutation,
+  namespace
+} from 'vuex-class'
 import {Component, Prop} from 'vue-property-decorator'
 import showSetOrSubSet from './showSetOrSubSet.vue'
 
@@ -71,9 +83,14 @@ import showSetOrSubSet from './showSetOrSubSet.vue'
 export default class Puzzles extends Vue{
   
   
-
+  @Prop()
+  puzzle: string
+  
   @Prop()
   setname: string 
+
+  @State Navigation
+  @Action setNavigation
 
   title: string 
   setisasubset = false
@@ -102,12 +119,47 @@ export default class Puzzles extends Vue{
   }
 
     gotopage(casename: string){
-        this.$router.push(`/case/${casename}`)
+        const puzzle = this.puzzle
+        const group = this.caseGroups[0]['groupName']
+        this.$router.push(`/${puzzle}/${group}/case/${casename}`)
     }
 
 
     created(){
         this.fetch()
+        const params = this.$route.path.split('/')
+        const nav: object[] = [{
+            text:'Home',
+            disabled:false,
+            to:'/',
+        }]
+        console.log(params)
+        if(params[1]=='333' || params[1]=='222'){
+          nav.push({
+            text: params[1],
+            disabled:false,
+            to:`/puzzle/${params[1]}`,
+         })
+         nav.push({
+            text: params[3],
+            disabled:true,
+            to:``,
+         })
+        }else{
+
+          nav.push({
+            text: '333',
+            disabled:false,
+            to:`/puzzle/333`,
+         })
+           nav.push({
+            text: params[3],
+            disabled:true,
+            to:`/${params[1]}/casegroup/${params[3]}`,
+        })
+
+        }
+        this.setNavigation(nav)
     }
 
     onresize(){

@@ -32,10 +32,14 @@
         sm=3
         v-for="(puzzleSet,index) in puzzleSets" :key="index"
          >
+         <v-hover
+                            v-slot:default="{ hover }"
+                            open-delay=100
+                         >
            <v-card 
             class="mx-auto"
             max-width="200"
-            elevation=10
+            :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(puzzleSet.shortName)"
           >
@@ -51,6 +55,7 @@
             :style="titlestyle"
             >{{puzzleSet.name}}</v-card-title>
           </v-card>
+         </v-hover>
         </v-col>
         </v-row>
        </v-col>
@@ -61,6 +66,13 @@
 
 <script lang='ts'>
 import Vue from 'vue'
+import {
+  State,
+  Getter,
+  Action,
+  Mutation,
+  namespace
+} from 'vuex-class'
 import {Component, Prop} from 'vue-property-decorator'
 
 
@@ -74,7 +86,8 @@ export default class Puzzles extends Vue{
   @Prop()
   shortname: string 
 
-
+  @State Navigation
+  @Action setNavigation
 
   puzzleSets = {}
   titlestyle = 'font-size:12px'
@@ -89,11 +102,37 @@ export default class Puzzles extends Vue{
        const res = await this.$http.get(`algdb/puzzleset?puzzle=${this.shortname}`)
         this.puzzleSets = res.data.data
     }
+        const params = this.$route.path.split('/')
+        const nav: object[] = [{
+            text:'Home',
+            disabled:false,
+            to:'/',
+        }]
+        console.log(params)
+        if(params[1]=='puzzle'){
+           nav.push({
+            text: params[2],
+            disabled:true,
+            to:`/puzzle/${params[2]}`,
+          })
+        }else{
+           nav.push({
+            text: '333',
+            disabled:false,
+            to:`/puzzle/333`,
+          })
+          nav.push({
+            text: params[3],
+            disabled:true,
+            to:`/333/casegroup/${params[3]}`,
+          })
+        }
+        this.setNavigation(nav)
     
   }
 
   gotopage(setname: string){
-    this.$router.push(`/casegroup/${setname}`)
+    this.$router.push(`/${this.shortname}/casegroup/${setname}`)
     this.$router.go(0)
     // this.$nextTick(function(){
     //     console.log('in nextTick')

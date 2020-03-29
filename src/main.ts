@@ -4,12 +4,14 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import axios from 'axios'
+// import moduleName from './plugins/visualcube/Player/index';
 
 Vue.config.productionTip = false
 
 Vue.prototype.$http = axios.create({
   // baseURL : 'http://localhost:3000'
-  baseURL : 'http://192.168.1.6:3000'
+  baseURL : 'https://solarsunrise.cn/api/cubenode/'
+  // baseURL : 'http://192.168.1.6:3000'
 })
 
 
