@@ -190,7 +190,7 @@ export default class Puzzles extends Vue{
 
 
 
-    VisualCube: VisualCube
+    VisualCube
 
     VisualCubeSize: number[] = [200,200]
 
@@ -215,11 +215,14 @@ export default class Puzzles extends Vue{
     windowSize: any = { x: 0,y:0}
 
     async fetch(){
+        if(this.puzzle!='222'&& this.puzzle!='333'){
+            this.puzzle = '333'
+        }
         const res = await this.$http.get(`algdb/case?puzzle=${this.puzzle}&case=${this.casename}&group=${this.group}&size=20&page=1`)
         this.Cases = res.data.data[0]
         this.ScreenCardTitle = this.Cases['caseAlgs'][0]['moves']
 
-        const cube = this.$refs.VisualCube;
+        const cube  = this.$refs["VisualCube"];
         this.VisualCube = cube;
         this.calVisualCubeSize()
         console.log(this.$refs)
@@ -238,6 +241,7 @@ export default class Puzzles extends Vue{
             alg : this.ScreenCardTitle,
             refresh: Math.random()
         }
+        console.log(newalg)
         this.VisualCube.setALG(newalg)
     }
 
