@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid v-resize="onresize">
       <v-row  class="home">
         <v-col 
         cols=8 
@@ -22,22 +22,22 @@
          >
           <v-hover
                             v-slot:default="{ hover }"
-                            open-delay=100
-                         >
+                            open-delay=100 >
            <v-card 
             class="mx-auto"
-            max-width="300"
+            max-width="350"
             :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(puzzle.shortName)"
           >
-            <v-img
+            <!-- <v-img
               class="white--text align-center"
               contain
               :src="puzzle.imageSrc"
             >
-            </v-img>
+            </v-img> -->
 
+            <VisualCube :config="vcconfig[index]" :cubesize="cubesize"></VisualCube>
             <v-card-title class="display-1 font-weight-black justify-center align-center" >{{puzzle.name}}</v-card-title>
           </v-card>
           </v-hover>
@@ -59,24 +59,69 @@ import {
   Mutation,
   namespace
 } from 'vuex-class'
-import Component from 'vue-class-component'
-// import ddddd from '../index'
+import { Ref,Component } from 'vue-property-decorator'
+import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
+import {VCCongfig} from '../plugins/cubestack/cuber/preferance';
 
-
-@Component({})
+@Component({
+  name : 'HOME',
+  components: {
+    VisualCube
+  }
+})
 export default class Puzzles extends Vue{
-  data = {}
+  constructor(){
+    super()
+  }
+  cubesize = []
+  vcconfig: VCCongfig[] = []
+  data = []
 
   @State Navigation
   @Action setNavigation
-
+  
 
   async fetch(){
     const res22 = await this.$http.get('algdb/puzzles/222')
     const res33 = await this.$http.get('algdb/puzzles/333')
     this.data = [res22.data,res33.data]
-    
+    for(let _cube of this.data){
+          this.vcconfig.push({
+            name : _cube.name,
+            model: 'playground',
+            lock: true,
+            cubeconfig: {
+              order : _cube.shortName == '222'? 2: 3
+            },
+            playerconfig: {
+              enable: true,
+              hide: true,
+              autoplay: false,
+              loop: false,
+              hoverplay: false
+            }
+          })
+    }
+  
   }
+
+
+  onresize(){
+    const width = window.innerWidth
+          // let size = []
+          if(width<600){
+                  this.cubesize = [150,150]
+              }else if(width<960){
+                  this.cubesize = [170,170]
+              }else if(width<1264){
+                  this.cubesize = [200,200]
+              }else if(width<1904){
+                  this.cubesize = [250,250]
+              }else{
+                  this.cubesize = [300,300]
+              }
+    }
+
 
   gotopage(puzzleshortname: string){
     this.$router.push(`/puzzle/${puzzleshortname}`)

@@ -5,16 +5,12 @@
 </template>
 
 <script lang="ts">
-
 import Vue from "vue";
-import { Component, Ref } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { WebGLRenderer } from "three";
-import cuber from "../cuber";
-import { COLORS } from "../cuber/define";
-import Toucher from "../common/toucher";
-
-Vue.prototype.cuber = cuber;
-// type HTMLElement = object
+import {Cuber} from "../../cuber";
+import { COLORS } from "../../cuber/define";
+import Toucher from "../../common/toucher";
 
 @Component({
   name:'Viewport',
@@ -23,37 +19,36 @@ Vue.prototype.cuber = cuber;
 export default class Viewport extends Vue {
   renderer: WebGLRenderer;
   toucher: Toucher;
+  cuber: Cuber;
   constructor() {
     super();
-    const canvas = document.createElement("canvas");
+    this.cuber = new Cuber()
+    let canvas = document.createElement("canvas");
     canvas.style.outline = "none";
     this.renderer = new WebGLRenderer({
       canvas: canvas,
       antialias: true
     });
-    // console.log('renderer',this.renderer)
     this.renderer.autoClear = false;
     this.renderer.setClearColor(COLORS.BACKGROUND);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.toucher = new Toucher();
-    // console.log(cuber)
-    this.toucher.init(canvas, cuber.controller.touch);
+    this.toucher.init(canvas, this.cuber.controller.touch);
   }
 
   resize(width: number, height: number) {
-    cuber.world.width = width;
-    cuber.world.height = height;
-    cuber.world.resize();
+    this.cuber.world.width = width;
+    this.cuber.world.height = height;
+    this.cuber.world.resize();
     this.renderer.setSize(width, height, true);
-    const view = this.$refs.cuber;
+    let view = this.$refs.cuber;
     if (view instanceof HTMLElement) {
       view.style.width = width + "px";
       view.style.height = height + "px";
     }
-    cuber.world.dirty = true;
+    this.cuber.world.dirty = true;
   }
 
-  
   setoffset(el: HTMLElement){
     this.toucher.setoffset(el)
   }
@@ -61,16 +56,15 @@ export default class Viewport extends Vue {
   mounted() {
     if (this.$refs.canvas instanceof Element) {
       this.$refs.canvas.appendChild(this.renderer.domElement);
-      // console.log(cuber.world)
     }
   }
 
   draw() {
-    if (cuber.world.dirty || cuber.world.cube.dirty) {
+    if (this.cuber.world.dirty || this.cuber.world.cube.dirty) {
       this.renderer.clear();
-      this.renderer.render(cuber.world.scene, cuber.world.camera);
-      cuber.world.dirty = false;
-      cuber.world.cube.dirty = false;
+      this.renderer.render(this.cuber.world.scene, this.cuber.world.camera);
+      this.cuber.world.dirty = false;
+      this.cuber.world.cube.dirty = false;
       return true;
     }
     return false;
@@ -78,4 +72,3 @@ export default class Viewport extends Vue {
 }
 
 </script>
-

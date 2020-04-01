@@ -25,6 +25,21 @@
             <v-list-item-title>Settings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-settings</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+              <p>2d</p>
+              <v-switch
+              v-model="show2dOr3d"
+              label="success"
+              color="success"
+              value="3d"
+              hide-details
+            ></v-switch>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -52,14 +67,16 @@
     
     </v-app-bar>
 
-    <v-breadcrumbs
-     divider=">" 
-     large :items="Navigation" style="padding-top:80px;padding-bottom:0px">
-    </v-breadcrumbs>
+    
 
-    <v-content style="padding:0px"
+    <v-content
         app
         fluid>
+        <v-breadcrumbs
+        v-if="!usephoneLayout"
+        divider=">" 
+        large :items="Navigation" >
+        </v-breadcrumbs>
                 <router-view ></router-view>
 
     </v-content>
@@ -115,6 +132,7 @@ export default Vue.extend({
       search:null,
       loading:null,
       config:true,
+      show2dOr3d:false,
       usephoneLayout:null,
       windowSize: { x: 0,y:0}
   }),

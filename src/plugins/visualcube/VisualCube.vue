@@ -12,7 +12,7 @@
 
 <script lang="ts">
     import Vue from "vue";
-    import { Component, Watch, Prop } from "vue-property-decorator";
+    import { Component, Watch, Prop, Ref } from "vue-property-decorator";
     import '../../plugins/icon.css'
 
     import Viewport from "./Viewport/index.vue";
@@ -48,6 +48,7 @@
     viewport: Viewport;
     player: Player;
     preferance: Preferance;
+
 
     constructor() {
         super();

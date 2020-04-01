@@ -12,8 +12,6 @@ export class TouchAction {
 export default class Toucher {
   private offsetX = 0
   private offsetY = 0
-
-
   init(canvas: HTMLCanvasElement, callback: Function) {
     this.canvas = canvas;
     this.callback = callback;
@@ -31,14 +29,13 @@ export default class Toucher {
   callback: Function;
 
   setoffset = (el: HTMLElement)=>{
-     [this.offsetX,this.offsetY] =  [el.getBoundingClientRect().left+window.scrollX,el.getBoundingClientRect().top+window.scrollY]
+    [this.offsetX,this.offsetY] =  [el.getBoundingClientRect().left+window.scrollX,el.getBoundingClientRect().top+window.scrollY]
   }
-
 
   mouse = (event: MouseEvent) => {
     this.canvas.tabIndex = 1;
     this.canvas.focus();
-    const action = new TouchAction(event.type, event.clientX-this.offsetX, event.clientY-this.offsetY);
+    let action = new TouchAction(event.type, event.clientX-this.offsetX, event.clientY-this.offsetY);
     this.callback(action);
     event.returnValue = false;
     return false;
@@ -47,9 +44,9 @@ export default class Toucher {
   touch = (event: TouchEvent) => {
     this.canvas.tabIndex = 1;
     this.canvas.focus();
-    const touches = event.changedTouches;
-    const first = touches[0];
-    const action = new TouchAction(event.type, first.clientX-this.offsetX, first.clientY-this.offsetY);
+    let touches = event.changedTouches;
+    let first = touches[0];
+    let action = new TouchAction(event.type, first.clientX, first.clientY);
     this.callback(action);
     event.preventDefault();
     return true;

@@ -184,13 +184,8 @@ export default class Puzzles extends Vue{
 
     @State Navigation
     @Action setNavigation
-
-
-
-
-
-
-    VisualCube
+    
+    VisualCube: VisualCube
 
     VisualCubeSize: number[] = [200,200]
 
@@ -222,8 +217,7 @@ export default class Puzzles extends Vue{
         this.Cases = res.data.data[0]
         this.ScreenCardTitle = this.Cases['caseAlgs'][0]['moves']
 
-        const cube  = this.$refs["VisualCube"];
-        this.VisualCube = cube;
+        this.VisualCube = this.$refs.VisualCube;
         this.calVisualCubeSize()
         console.log(this.$refs)
         // 消除子集

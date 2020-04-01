@@ -1,0 +1,257 @@
+<v-app>
+  <div v-resize="resize" style="user-select: none;background-color: white;">
+    <dash></dash>
+    <viewport ref="viewport"></viewport>
+    <v-container
+      fluid
+      grid-list-md
+      text-xs-center
+      :style="{width:size * 8 + 'px', height:size * 4.4 + 32 + 'px'}"
+      style="padding:0%;touch-action: none;"
+    >
+      <v-layout row wrap>
+        <v-flex
+          xs12
+          style="display: flex;"
+          :style="{'padding-left': size / 4 + 'px','padding-right': size / 4 + 'px','padding-bottom': size / 8 + 'px'}"
+        >
+          <v-btn @click="tap('settings')" :style="style" text :ripple="false" :disabled="recording">
+            <v-icon :size="size * 0.8">widgets</v-icon>
+          </v-btn>
+          <v-btn @click="tap('tune')" :style="style" text :ripple="false" :disabled="recording">
+            <v-icon :size="size * 0.8">settings</v-icon>
+          </v-btn>
+          <v-btn @click="tap('output')" :style="style" text :ripple="false" :disabled="recording">
+            <v-icon :size="size * 0.8">style</v-icon>
+          </v-btn>
+          <v-btn @click="tap('color')" :style="style" text :ripple="false" :color="colors[color]" :disabled="recording">
+            <v-icon :size="size * 0.8">palette</v-icon>
+          </v-btn>
+          <v-btn @click="tap('film')" :style="style" text :ripple="false">
+            <v-icon :size="size * 0.8">{{action.length==0?'camera_alt':(recording?'stop':'videocam')}}</v-icon>
+          </v-btn>
+        </v-flex>
+        <v-flex xs12>
+          <v-text-field
+            style="text-transform:none;"
+            :height="size * 0.8"
+            :style="{'padding-left': size / 4 + 'px','padding-right': size / 4 + 'px', 'font-size':size*0.4+'px'}"
+            dense
+            single-line
+            hide-details
+            outlined
+            :disabled="recording"
+            v-model="scene"
+          >
+            <v-btn
+              tabindex="-1"
+              slot="label"
+              text
+              style="margin: 0%; padding:0%; min-width: 0%; min-height: 0%;"
+              :style="{width:size * 0.4+'px',height:size * 0.8+'px'}"
+            >
+              <v-icon :size="size * 0.4" style="vertical-align: middle">terrain</v-icon>
+            </v-btn>
+            <v-btn
+              tabindex="-1"
+              slot="append"
+              text
+              style="margin: 0%; padding:0%; min-width: 0%; min-height: 0%;"
+              :style="{width:size * 0.4 + 'px',height:size * 0.8+'px'}"
+              @click="scened=true"
+              :disabled="recording"
+            >
+              <v-icon :size="size * 0.4">edit</v-icon>
+            </v-btn>
+          </v-text-field>
+        </v-flex>
+        <v-flex xs12>
+          <v-text-field
+            style="text-transform:none;"
+            :height="size * 0.8"
+            :style="{'padding-left': size / 4 + 'px','padding-right': size / 4 + 'px', 'margin-top':size/8 + 'px', 'font-size':size*0.4+'px'}"
+            dense
+            single-line
+            hide-details
+            outlined
+            :disabled="recording"
+            v-model="action"
+          >
+            <v-btn
+              tabindex="-1"
+              slot="label"
+              text
+              style="margin: 0%; padding:0%; min-width: 0%; min-height: 0%;"
+              :style="{width:size * 0.4+'px',height:size * 0.8+'px'}"
+            >
+              <v-icon :size="size * 0.4" style="vertical-align: middle">theaters</v-icon>
+            </v-btn>
+            <v-btn
+              tabindex="-1"
+              slot="append"
+              text
+              style="margin: 0%; padding:0%; min-width: 0%; min-height: 0%;"
+              :style="{width:size * 0.4 + 'px',height:size * 0.8+'px'}"
+              @click="actiond=true"
+              :disabled="recording"
+            >
+              <v-icon :size="size * 0.4">edit</v-icon>
+            </v-btn>
+          </v-text-field>
+        </v-flex>
+      </v-layout>
+      <player ref="player" :disable="recording"></player>
+    </v-container>
+    <tune v-model="tuned"></tune>
+    <setting v-model="settingd" v-on:order="order"></setting>
+    <v-bottom-sheet v-model="outputd">
+      <v-card flat style="margin: auto;touch-action: none;user-select: none;">
+        <v-container fluid grid-list-md text-xs-center :style="{width:size * 8 + 'px'}">
+          <v-layout row wrap justify-center align-center :style="{'padding-top':size * 0.2 + 'px'}">
+            <v-flex xs2>
+              <div :style="{'font-size':size * 0.3+'px'}">像素:</div>
+            </v-flex>
+            <v-flex xs10 style="display: flex;">
+              <v-btn
+                v-for="i in [128, 256, 512, 1024, 2048]"
+                :key="i"
+                @click="pixel=i"
+                :color="pixel == i?'primary':''"
+                depressed
+                style="text-transform:none; min-width: 0%;flex: 1"
+                :height="size * 0.8"
+                :style="{'font-size':size * 0.3+'px'}"
+              >
+                <div>{{i}}</div>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap justify-center align-center :style="{'padding-top':size * 0.2 + 'px'}">
+            <v-flex xs2>
+              <div :style="{'font-size':size * 0.3+'px'}">间隔:</div>
+            </v-flex>
+            <v-flex xs10 style="display: flex;">
+              <v-btn
+                v-for="i in [2, 3, 4, 5, 6, 8, 10]"
+                :key="i"
+                @click="delay=i"
+                :color="delay == i?'primary':''"
+                depressed
+                style="text-transform:none; min-width: 0%;flex: 1"
+                :height="size * 0.8"
+                :style="{'font-size':size * 0.3+'px'}"
+              >
+                <div>{{i}}</div>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap justify-center align-center :style="{'padding-top':size * 0.2 + 'px'}">
+            <v-flex xs2>
+              <div :style="{'font-size':size * 0.3+'px'}">输出:</div>
+            </v-flex>
+            <v-flex xs10 style="display: flex;">
+              <v-btn
+                v-for="i in ['gif', 'apng', 'pngs']"
+                :key="i"
+                @click="output=i"
+                :color="output == i?'primary':''"
+                depressed
+                style="text-transform:none; min-width: 0%;flex: 1"
+                :height="size * 0.8"
+                :style="{'font-size':size * 0.3+'px'}"
+              >
+                <div>{{i.toUpperCase()}}</div>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap justify-center align-center style="margin-top: 1em;">
+            <v-flex xs12 style="display: flex;">
+              <v-btn
+                @click="outputd=false;"
+                color="primary"
+                text
+                style="text-transform:none; min-width: 0%;flex: 1"
+                :height="size * 0.8"
+                :style="{'font-size':size * 0.3+'px'}"
+              >
+                确定
+              </v-btn>
+              <v-btn
+                @click="pixel=512;delay=2;output='gif';"
+                color="error"
+                text
+                style="text-transform:none; min-width: 0%;flex: 1"
+                :height="size * 0.8"
+                :style="{'font-size':size * 0.3+'px'}"
+              >
+                重置
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card>
+    </v-bottom-sheet>
+    <v-bottom-sheet v-model="colord">
+      <v-card flat style="margin: auto;touch-action: none;user-select: none;">
+        <v-container fluid grid-list-md text-xs-center :style="{width:size * 8 + 'px'}">
+          <v-layout row wrap>
+            <v-flex v-for="(item, index) in colors" :key="index" xs2 style="padding: 1%;">
+              <v-btn
+                @click="colord = false; color = index;"
+                :color="item"
+                block
+                depressed
+                style="min-width: 0%; min-height: 0%; margin: 0%; padding: 0%;"
+                :height="size"
+              >
+              </v-btn>
+            </v-flex>
+            <v-flex xs2 style="padding: 1%;">
+              <v-btn
+                @click="clear"
+                block
+                text
+                style="min-width: 0%; min-height: 0%; margin: 0%; padding: 0%;"
+                :height="size"
+              >
+                <v-icon :size="size * 0.8" color="red">replay</v-icon>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card>
+    </v-bottom-sheet>
+    <v-dialog v-model="scened" :width="size * 6">
+      <v-card>
+        <v-card-text style="text-transform:none;">
+          <v-textarea
+            :style="{'font-size':size / 3 + 'px', 'line-height':size / 2 + 'px'}"
+            auto-grow
+            solo
+            flat
+            no-resize
+            hide-details
+            v-model="scene"
+          >
+          </v-textarea>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="actiond" :width="size * 6">
+      <v-card>
+        <v-card-text style="text-transform:none;">
+          <v-textarea
+            :style="{'font-size':size / 3 + 'px', 'line-height':size / 2 + 'px'}"
+            auto-grow
+            solo
+            flat
+            no-resize
+            hide-details
+            v-model="action"
+          >
+          </v-textarea>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </div>
+</v-app>

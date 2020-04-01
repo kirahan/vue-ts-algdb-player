@@ -46,12 +46,14 @@
             d-inline
             @click="gotopage(caseGroup.shortName)"
           >
-            <v-img
+            <!-- <v-img
               class="white--text align-center"
               contain
               :src="caseGroup.imageSrc"
             >
-            </v-img>
+            </v-img> -->
+
+            <VisualCube :config="vcconfig[index]" :cubesize="cubesize"></VisualCube>
 
             <v-card-title 
             class="justify-center align-center font-weight-black"
@@ -78,8 +80,11 @@ import {
 } from 'vuex-class'
 import {Component, Prop} from 'vue-property-decorator'
 import showSetOrSubSet from './showSetOrSubSet.vue'
+import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
 
-@Component({name:'showCaseGroup',components:{showSetOrSubSet}})
+import {VCCongfig} from '../plugins/cubestack/cuber/preferance';
+
+@Component({name:'showCaseGroup',components:{showSetOrSubSet,VisualCube}})
 export default class Puzzles extends Vue{
   
   
@@ -95,10 +100,14 @@ export default class Puzzles extends Vue{
   title: string 
   setisasubset = false
 
-  caseGroups = {}
+  caseGroups = []
 
   titlestyle = 'font-size:12px'
   windowSize: any = { x: 0,y:0}
+
+
+  vcconfig: VCCongfig[] = []
+  cubesize: number[] 
 
   async fetch(){
     // const group = await this.$http.get(`algdb/caseGroup?group=${this.setname}&size=100&page=1`)
@@ -110,12 +119,36 @@ export default class Puzzles extends Vue{
     if(res.data.data.length!=0){
         this.caseGroups = res.data.data
         this.title = res.data.data[0].caseGroupWholeName
+
+        for(let casegroup of this.caseGroups){
+          this.vcconfig.push({
+            name : casegroup.name,
+            model: 'playground',
+            lock: true,
+            cubeconfig: {
+              order : casegroup.puzzle == '222'? 2: 3
+            },
+            playerconfig: {
+              enable: true,
+              hide: true,
+              autoplay: false,
+              loop: true,
+              hoverplay: true,
+              scene: '^',
+              alg: casegroup.genAlgs,
+              masktype: casegroup.groupName
+            }
+          })
+    }
     }else{
         const haschildren =await this.$http.get(`algdb/puzzleset?set=${this.setname}&haschildren=true`)
         if(haschildren.data.data.length!=0) {
             this.setisasubset = true
         }
     }
+
+
+    
   }
 
     gotopage(casename: string){
@@ -165,6 +198,23 @@ export default class Puzzles extends Vue{
     onresize(){
         this.windowSize =  { x: window.innerWidth, y: window.innerHeight }
         this.refreshtitlestyle()
+        this.refreshcubesize()
+    }
+
+    refreshcubesize(){
+      const width = window.innerWidth
+          // let size = []
+          if(width<600){
+                  this.cubesize = [100,100]
+              }else if(width<960){
+                  this.cubesize = [75,75]
+              }else if(width<1264){
+                  this.cubesize = [125,125]
+              }else if(width<1904){
+                  this.cubesize = [150,150]
+              }else{
+                  this.cubesize = [175,175]
+              }
     }
 
     refreshtitlestyle (): string {
