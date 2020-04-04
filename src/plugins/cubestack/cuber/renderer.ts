@@ -67,7 +67,7 @@ export default class CubeRenderer{
         this.size = renderconfig.size ? renderconfig.size : [200,200]
         this.resize(this.size[0],this.size[1])
 
-        if(renderconfig.masktype){
+        if(this.cuber.preferance.order==3 && renderconfig.masktype){
             const strip = CubeStageMask[renderconfig.masktype].strip
             this.cuber.world.cube.strip(strip)
         }
@@ -116,10 +116,6 @@ export default class CubeRenderer{
         }
 
         callback()
-
-        // if(renderconfig.coverImgNotModel){
-        //     this.refreshCoverImage(renderconfig.cubename)
-        // }
     }
 
     // 没有传参，表示直接用上文中的renderer，有传参就装载

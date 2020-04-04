@@ -25,7 +25,7 @@
                             open-delay=100 >
            <v-card 
             class="mx-auto"
-            max-width="350"
+            max-width="300"
             :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(puzzle.shortName)"
@@ -37,7 +37,7 @@
             >
             </v-img> -->
 
-            <VisualCube :config="vcconfig[index]" :cubesize="cubesize"></VisualCube>
+            <VisualCube :cubeconfig="cubeconfig[index]" :cubesize="cubesize"></VisualCube>
             <v-card-title class="display-1 font-weight-black justify-center align-center" >{{puzzle.name}}</v-card-title>
           </v-card>
           </v-hover>
@@ -60,8 +60,9 @@ import {
   namespace
 } from 'vuex-class'
 import { Ref,Component } from 'vue-property-decorator'
-import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
-import {VCCongfig} from '../plugins/cubestack/cuber/preferance';
+// import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
+import VisualCube from '../plugins/cubestack/vue/CubeImgCover/index.vue'
+import { CubeCongfig } from '../plugins/cubestack/cuber/interface';
 
 
 @Component({
@@ -75,7 +76,7 @@ export default class Puzzles extends Vue{
     super()
   }
   cubesize = []
-  vcconfig: VCCongfig[] = []
+  cubeconfig: CubeCongfig[] = []
   data = []
 
   @State Navigation
@@ -87,12 +88,18 @@ export default class Puzzles extends Vue{
     const res33 = await this.$http.get('algdb/puzzles/333')
     this.data = [res22.data,res33.data]
     for(let _cube of this.data){
-          this.vcconfig.push({
+          this.cubeconfig.push({
             name : _cube.name,
             model: 'playground',
             lock: true,
-            cubeconfig: {
-              order : _cube.shortName == '222'? 2: 3
+            renderconfig: {
+              cubename: _cube.name,
+              size: [300,300],
+              template: 'playground',
+              coverImgNotModel: false,
+              preferance: {
+                order : _cube.shortName == '222'? 2: 3
+              }
             },
             playerconfig: {
               enable: true,
@@ -103,6 +110,8 @@ export default class Puzzles extends Vue{
             }
           })
     }
+
+    console.log(this.cubeconfig)
   
   }
 

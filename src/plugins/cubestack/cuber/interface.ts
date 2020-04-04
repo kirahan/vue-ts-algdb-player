@@ -40,7 +40,7 @@ export class Playerconfig{
       this.autoplay = false,
       this.loop = false,
       this.hoverplay = true,
-      this.speed = 'x1',
+      this.speed = 'x1'
     }
 }
 

@@ -50,7 +50,8 @@ export default class Viewport extends Vue {
   }
 
   setoffset(el: HTMLElement){
-    this.toucher.setoffset(el)
+    // this.toucher.setoffset(el)
+    null
   }
 
   mounted() {

@@ -6,8 +6,8 @@
         @mouseenter="hoverin"
         @mouseleave="hoverout"
         >
-        <div ref="cubediv" :style="cubewidth"></div>
-        <div :ref="renderconfig.refname"></div>
+        <div ref="cubediv" class="cubediv" ></div>
+        <div :ref="renderconfig.refname"  class="cubediv" ></div>
 
         <player 
         v-if="playerconfig.enable" 
@@ -36,7 +36,7 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
     // CubeStageMask = require('./strip.json')
     renderconfig: RenderConfig
     playerconfig: Playerconfig
-    cuberef: HTMLDivElement
+    cuberef: any
     cubename: string
 
     cuber: Cuber;
@@ -50,7 +50,6 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
 
 
 
-    cubewidth: string 
 
     
     
@@ -63,7 +62,6 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
         this.renderconfig = this.cubeconfig.renderconfig
         this.playerconfig = this.cubeconfig.playerconfig
         this.cubename = this.renderconfig.cubename
-        this.cubewidth = `width:${this.cubesize ? this.cubesize : this.renderconfig.size[0]}px`
     }
         
 
@@ -98,7 +96,7 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
             size: this.renderconfig.size || [200,200],
             template:this.renderconfig.template || null,
             coverImgNotModel: this.renderconfig.coverImgNotModel || false,
-            preferance: this.cubeconfig.renderconfig.preferance || null
+            preferance: this.renderconfig.preferance || null
         },()=>{
 
                 this.cuber = this.$cuberender.pagecubes[this.cubename].cuber
@@ -160,41 +158,39 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
 
     @Watch('cubesize')
     onCubesizeChange(){
-        // this.resize(this.cubesize)
-        this.cubewidth =`width:${this.cubesize ? this.cubesize : this.renderconfig.size[0]}px`
         let imgElements = document.getElementsByTagName('IMG')
         for(let imgelement of imgElements){
-            imgelement.style.width = this.cubesize[0] + 'px'
+            imgelement["style"]["width"] = this.cubesize[0] + 'px'
         }
         // this.$cuberender.resize(this.cubesize[0],this.cubesize[1]) 
     }
 
     
     hoverin(){
-        setTimeout(() => {
-            this.$cuberender.bind({
-            cubename: this.cubename
-            })
-            this.$cuberender.resize(this.cubesize[0],this.cubesize[1])
-            if(this.playerconfig.hoverplay){
-                    const start = Date.now()
-                    const loop = setInterval(()=>{
-                        let end = Date.now()
-                        if((end-start)>500)
-                        {
-                            try{
-                                this.player.playing = true;
-                                this.player.callback();
-                                clearInterval(loop)
-                            }catch{
-                                clearInterval(loop)
-                            }
-                        }
-                    },123)
-            }
-            // 开始刷新
-            this.loop();
-        }, 100);
+      
+    this.$cuberender.bind({
+    cubename: this.cubename
+    })
+    this.$cuberender.resize(this.cubesize[0],this.cubesize[1])
+    if(this.playerconfig.hoverplay){
+            const start = Date.now()
+            const loop = setInterval(()=>{
+                let end = Date.now()
+                if((end-start)>500)
+                {
+                    try{
+                        this.player.playing = true;
+                        this.player.callback();
+                        clearInterval(loop)
+                    }catch{
+                        clearInterval(loop)
+                    }
+                }
+            },123)
+    }
+    // 开始刷新
+    this.loop();
+     
     }
 
     hoverout(){
@@ -237,5 +233,8 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
         /* text-align: center; */
         width: fit-content;
         display: contents;
+    }
+    .cubediv{
+        text-align: center;
     }
 </style>

@@ -102,7 +102,7 @@ export default class Puzzles extends Vue{
   @State Navigation
   @Action setNavigation
 
-  title: string 
+  title: string  = ''
   setisasubset = false
 
   caseGroups = []
@@ -177,7 +177,6 @@ export default class Puzzles extends Vue{
             disabled:false,
             to:'/',
         }]
-        console.log(params)
         if(params[1]=='333' || params[1]=='222'){
           nav.push({
             text: params[1],

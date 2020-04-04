@@ -96,11 +96,6 @@ export default class Player extends Vue {
   }
 
 
-@Watch('cubename')
-onCubenameChange(){
-  this.cuber = this.$cuberender.pagecubes[this.cubename].cuber
-  console.log(this.cuber)
-}
 
 
   playing: boolean = false;
