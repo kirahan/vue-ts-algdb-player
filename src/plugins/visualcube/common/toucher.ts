@@ -33,8 +33,7 @@ export default class Toucher {
   setoffset = (el: HTMLElement)=>{
      [this.offsetX,this.offsetY] =  [el.getBoundingClientRect().left+window.scrollX,el.getBoundingClientRect().top+window.scrollY]
   }
-
-
+  
   mouse = (event: MouseEvent) => {
     this.canvas.tabIndex = 1;
     this.canvas.focus();

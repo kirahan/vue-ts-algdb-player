@@ -63,6 +63,7 @@ import { Ref,Component } from 'vue-property-decorator'
 import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
 import {VCCongfig} from '../plugins/cubestack/cuber/preferance';
 
+
 @Component({
   name : 'HOME',
   components: {

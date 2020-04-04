@@ -1,4 +1,5 @@
 import Cube from "./cube";
+import {Cuber} from '.';
 import Cubelet from "./cubelet";
 import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight } from "three";
 import { TwistNode } from "./twister";
@@ -9,12 +10,11 @@ export default class Capture {
   public scene: Scene;
   public camera: PerspectiveCamera;
   public cube: Cube;
+  public cuber: Cuber;
 
-  constructor() {
-    this.cube = new Cube(3, () => {});
-    for (let cubelet of this.cube.cubelets) {
-      cubelet.mirror = false;
-    }
+  constructor(cuber?: Cuber) {
+    this.cuber = cuber ? cuber : new Cuber()
+    this.cube = this.cuber.world.cube
     this.renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
     this.renderer.setClearColor(0, 0);
     this.renderer.setPixelRatio(1);

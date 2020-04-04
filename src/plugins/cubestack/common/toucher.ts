@@ -28,8 +28,9 @@ export default class Toucher {
   canvas: HTMLCanvasElement;
   callback: Function;
 
-  setoffset = (el: HTMLElement)=>{
-    [this.offsetX,this.offsetY] =  [el.getBoundingClientRect().left+window.scrollX,el.getBoundingClientRect().top+window.scrollY]
+  setoffset = (canvas: HTMLCanvasElement)=>{
+    // 不需要计算scroll值，只需要在scroll事件发生的时候重新计算一次即可
+    [this.offsetX,this.offsetY] =  [canvas.getBoundingClientRect().left,canvas.getBoundingClientRect().top]
   }
 
   mouse = (event: MouseEvent) => {
@@ -46,7 +47,7 @@ export default class Toucher {
     this.canvas.focus();
     let touches = event.changedTouches;
     let first = touches[0];
-    let action = new TouchAction(event.type, first.clientX, first.clientY);
+    let action = new TouchAction(event.type, first.clientX-this.offsetX, first.clientY-this.offsetY);
     this.callback(action);
     event.preventDefault();
     return true;

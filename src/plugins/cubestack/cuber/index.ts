@@ -2,7 +2,7 @@ import Tweener from "./tweener";
 import Twister from "./twister";
 import Preferance from "./preferance";
 import Controller from "./controller";
-import Capture from "./capture";
+// import Capture from "./capture";
 import World from "./world";
 import History from "./history";
 
@@ -14,7 +14,7 @@ export class Cuber {
   history: History;
   preferance: Preferance;
   controller: Controller;
-  capture: Capture;
+  // capture: Capture;
 
   constructor() {
     this.world = new World(this);
@@ -23,7 +23,7 @@ export class Cuber {
     this.history = new History(this);
     this.preferance = new Preferance(this);
     this.controller = new Controller(this);
-    this.capture = new Capture();
+    // this.capture = new Capture();
     this._context = this
   }
 }

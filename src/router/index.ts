@@ -5,6 +5,7 @@ import showSetOrSubSet  from '../components/showSetOrSubSet.vue'
 import showCaseGroup  from '../components/showCaseGroup.vue'
 import showCase from '../components/showCase.vue';
 import logcube from '../components/lotcube.vue';
+import test from '../components/test.vue';
 Vue.use(VueRouter)
 
 const routes = [
@@ -36,6 +37,11 @@ const routes = [
     path:'/lotcube',
     name:'lotcube',
     component:logcube
+  },
+  {
+    path:'/test',
+    name:'test',
+    component:test
   }
 
 ]

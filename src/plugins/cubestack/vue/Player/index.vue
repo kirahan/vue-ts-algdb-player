@@ -41,6 +41,7 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { TwistAction, TwistNode } from "../../cuber/twister";
+import {Cuber} from "../../cuber";
 
 @Component({
   name: 'PLayer',
@@ -51,8 +52,6 @@ export default class Player extends Vue {
   @Prop({ required: false, default: false })
   disable: boolean;
 
-  @Prop()
-  cuber
 
   @Prop()
   autoplay: boolean
@@ -60,19 +59,26 @@ export default class Player extends Vue {
   @Prop()
   loop: boolean
 
+  cuber: Cuber
+
   size: number = 0;
   constructor() {
     super();
   }
 
-  // mounted() {
-  //   setTimeout(() => {
-  //     this.cuber.world.callbacks.push(() => {
-  //     this.callback();
-  //     });
-  //   }, 2000);
+  mounted() {
+    // console.log(this.cubename)
+    // console.log(this.$cuberender)
+    // this.cuber = this.$cuberender.pagecubes[this.cubename].cuber
+    // setTimeout(() => {
+    //   this.cuber.world.callbacks.push(() => {
+    //   this.callback();
+    //   });
+    // }, 2000);
+
+    // console.log(this.cuber)
     
-  // }
+  }
 
   resize(size: number) {
     this.size = size;
@@ -88,6 +94,14 @@ export default class Player extends Vue {
       flex: 1
     };
   }
+
+
+@Watch('cubename')
+onCubenameChange(){
+  this.cuber = this.$cuberender.pagecubes[this.cubename].cuber
+  console.log(this.cuber)
+}
+
 
   playing: boolean = false;
   progress: number = 0;

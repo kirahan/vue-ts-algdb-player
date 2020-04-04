@@ -162,7 +162,7 @@ import {
   Mutation,
   namespace
 } from 'vuex-class'
-import {Component, Prop} from 'vue-property-decorator'
+import {Component, Prop, Ref} from 'vue-property-decorator'
 import VisualCube from '../plugins/visualcube/VisualCube.vue'
 import Viewport from '../plugins/visualcube/Viewport/index.vue';
 /* eslint-disable @typescript-eslint/no-inferrable-types */
@@ -185,7 +185,7 @@ export default class Puzzles extends Vue{
     @State Navigation
     @Action setNavigation
     
-    VisualCube: VisualCube
+    @Ref('VisualCube') VisualCube: VisualCube
 
     VisualCubeSize: number[] = [200,200]
 
@@ -217,7 +217,6 @@ export default class Puzzles extends Vue{
         this.Cases = res.data.data[0]
         this.ScreenCardTitle = this.Cases['caseAlgs'][0]['moves']
 
-        this.VisualCube = this.$refs.VisualCube;
         this.calVisualCubeSize()
         console.log(this.$refs)
         // 消除子集

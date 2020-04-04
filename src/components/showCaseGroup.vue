@@ -41,7 +41,7 @@
                          >
            <v-card 
             class="mx-auto"
-            max-width="200"
+            max-width="250"
             :elevation="hover ? 18 : 5"
             d-inline
             @click="gotopage(caseGroup.shortName)"
@@ -53,7 +53,7 @@
             >
             </v-img> -->
 
-            <VisualCube :config="vcconfig[index]" :cubesize="cubesize"></VisualCube>
+            <VisualCube :cubeconfig="cubeconfig[index]" :cubesize="cubesize"></VisualCube>
 
             <v-card-title 
             class="justify-center align-center font-weight-black"
@@ -80,9 +80,14 @@ import {
 } from 'vuex-class'
 import {Component, Prop} from 'vue-property-decorator'
 import showSetOrSubSet from './showSetOrSubSet.vue'
-import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
+// 直接渲染的版本
+// import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
 
-import {VCCongfig} from '../plugins/cubestack/cuber/preferance';
+
+import VisualCube from '../plugins/cubestack/vue/CubeImgCover/index.vue'
+
+
+import { CubeCongfig } from '../plugins/cubestack/cuber/interface'
 
 @Component({name:'showCaseGroup',components:{showSetOrSubSet,VisualCube}})
 export default class Puzzles extends Vue{
@@ -106,7 +111,7 @@ export default class Puzzles extends Vue{
   windowSize: any = { x: 0,y:0}
 
 
-  vcconfig: VCCongfig[] = []
+  cubeconfig: CubeCongfig[] = []
   cubesize: number[] 
 
   async fetch(){
@@ -115,18 +120,25 @@ export default class Puzzles extends Vue{
 
     //   algdb/caseGroup?case=vls&page=1&size=20
     const res = await this.$http.get(`algdb/caseGroup?group=${this.setname}&size=100&page=1`)
-    console.log(res.data.data.length)
     if(res.data.data.length!=0){
         this.caseGroups = res.data.data
         this.title = res.data.data[0].caseGroupWholeName
-
         for(let casegroup of this.caseGroups){
-          this.vcconfig.push({
+          this.cubeconfig.push({
             name : casegroup.name,
-            model: 'playground',
+            model: 'xxx',
             lock: true,
-            cubeconfig: {
-              order : casegroup.puzzle == '222'? 2: 3
+            renderconfig:{
+              cubename: casegroup.name,
+              size: this.cubesize,
+              template: 'playground',
+              coverImgNotModel: true,
+              scene:'^',
+              alg: casegroup.genAlgs,
+              masktype: casegroup.groupName,
+              preferance: {
+                order : casegroup.puzzle == '222'? 2: 3
+              }
             },
             playerconfig: {
               enable: true,
@@ -134,9 +146,7 @@ export default class Puzzles extends Vue{
               autoplay: false,
               loop: true,
               hoverplay: true,
-              scene: '^',
-              alg: casegroup.genAlgs,
-              masktype: casegroup.groupName
+              speed: 'x1',
             }
           })
     }
@@ -147,7 +157,7 @@ export default class Puzzles extends Vue{
         }
     }
 
-
+    console.log(this.$cuberender)
     
   }
 
@@ -160,6 +170,7 @@ export default class Puzzles extends Vue{
 
     created(){
         this.fetch()
+        this.refreshcubesize()
         const params = this.$route.path.split('/')
         const nav: object[] = [{
             text:'Home',
@@ -205,15 +216,15 @@ export default class Puzzles extends Vue{
       const width = window.innerWidth
           // let size = []
           if(width<600){
-                  this.cubesize = [100,100]
-              }else if(width<960){
-                  this.cubesize = [75,75]
-              }else if(width<1264){
-                  this.cubesize = [125,125]
-              }else if(width<1904){
                   this.cubesize = [150,150]
+              }else if(width<960){
+                  this.cubesize = [100,100]
+              }else if(width<1264){
+                  this.cubesize = [150,150]
+              }else if(width<1904){
+                  this.cubesize = [200,200]
               }else{
-                  this.cubesize = [175,175]
+                  this.cubesize = [250,250]
               }
     }
 
