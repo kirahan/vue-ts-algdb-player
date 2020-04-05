@@ -40,7 +40,7 @@
                             open-delay=100
                          >
            <v-card 
-            class="mx-auto"
+            class="mx-auto justify-center"
             max-width="250"
             :elevation="hover ? 18 : 5"
             d-inline
@@ -53,7 +53,7 @@
             >
             </v-img> -->
 
-            <VisualCube :cubeconfig="cubeconfig[index]" :cubesize="cubesize"></VisualCube>
+            <Render :cubeconfig="cubeconfig[index]" :cubesize="cubesize"></Render>
 
             <v-card-title 
             class="justify-center align-center font-weight-black"
@@ -84,12 +84,11 @@ import showSetOrSubSet from './showSetOrSubSet.vue'
 // import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
 
 
-import VisualCube from '../plugins/cubestack/vue/CubeImgCover/index.vue'
+import Render from '../plugins/v3/vue/Render/index.vue';
 
+import { CubeCongfig } from '../plugins/v3/cuber/interfaces'
 
-import { CubeCongfig } from '../plugins/cubestack/cuber/interface'
-
-@Component({name:'showCaseGroup',components:{showSetOrSubSet,VisualCube}})
+@Component({name:'showCaseGroup',components:{showSetOrSubSet,Render}})
 export default class Puzzles extends Vue{
   
   
@@ -125,30 +124,27 @@ export default class Puzzles extends Vue{
         this.title = res.data.data[0].caseGroupWholeName
         for(let casegroup of this.caseGroups){
           this.cubeconfig.push({
-            name : casegroup.name,
+            cubename : casegroup.name,
             model: 'xxx',
-            lock: true,
             renderconfig:{
-              cubename: casegroup.name,
-              size: this.cubesize,
-              template: 'playground',
-              coverImgNotModel: true,
-              scene:'^',
-              alg: casegroup.genAlgs,
-              masktype: casegroup.groupName,
-              preferance: {
-                order : casegroup.puzzle == '222'? 2: 3
-              }
+                order: casegroup.puzzle == '222'? 2: 3,
+                size: this.cubesize,
+                template: 'playground',
+                coverImgNotModel: true,
+                scene:'^',
+                alg: casegroup.genAlgs,
+                masktype: casegroup.groupName,
+                preferance: {
+                    
+                }
             },
             playerconfig: {
-              enable: true,
-              hide: true,
-              autoplay: false,
-              loop: true,
-              hoverplay: true,
-              speed: 'x1',
+                autoplay: false,
+                loop: true,
+                hoverplay: true,            
+                lock: true
             }
-          })
+        })
     }
     }else{
         const haschildren =await this.$http.get(`algdb/puzzleset?set=${this.setname}&haschildren=true`)
@@ -157,7 +153,6 @@ export default class Puzzles extends Vue{
         }
     }
 
-    console.log(this.$cuberender)
     
   }
 

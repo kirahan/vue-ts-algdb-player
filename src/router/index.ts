@@ -2,9 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import showSetOrSubSet  from '../components/showSetOrSubSet.vue'
-import showCaseGroup  from '../components/showCaseGroup.vue'
+import showCaseGroup  from '../components/v3showCaseGroup.vue'
 import showCase from '../components/showCase.vue';
 import test from '../components/test.vue';
+import v3  from '../components/v3cube.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -36,6 +37,11 @@ const routes = [
     path:'/test',
     name:'test',
     component:test
+  },
+  {
+    path:'/v3',
+    name:'v3',
+    component:v3
   }
 
 ]

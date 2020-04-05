@@ -196,9 +196,7 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
     hoverout(){
         
         // console.log(this.cuber.world.cube.lock)
-        this.cuber.controller.handleUp()
-        this.cuber.twister.finish()
-        if(this.playerconfig.hoverplay){
+         if(this.playerconfig.hoverplay){
             try{
                 this.player.playing = false
                 this.player.init()
@@ -206,6 +204,9 @@ import { RenderConfig, Playerconfig, CubeCongfig } from '../../cuber/interface';
                 null
             }
         }
+        this.cuber.controller.handleUp()
+        this.cuber.twister.finish()
+       
         this.$cuberender.unbind(this.cubename)
         cancelAnimationFrame(this.r_id)
     

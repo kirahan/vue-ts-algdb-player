@@ -91,7 +91,7 @@ export default class Puzzles extends Vue{
           this.cubeconfig.push({
             name : _cube.name,
             model: 'playground',
-            lock: true,
+            lock: false,
             renderconfig: {
               cubename: _cube.name,
               size: [300,300],

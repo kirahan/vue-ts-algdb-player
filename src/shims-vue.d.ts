@@ -1,10 +1,11 @@
+import Vue from 'vue'
 declare module '*.vue' {
   import Vue from 'vue'
   export default Vue
 }
 
 // 1. 确保在声明补充的类型之前导入 'vue'
-import Vue from 'vue'
+// import Vue from 'vue'
 // import Vue from 'vue'
 import { AxiosInstance } from 'axios';
 import { CubeRendererInstance } from './plugins/cubestack/cuber/interface';
