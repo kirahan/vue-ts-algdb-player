@@ -120,7 +120,7 @@ import Vue from 'vue';
 import {mapState} from 'vuex'
 import store from './store'
 import { CubeCongfig } from './plugins/v3/cuber/interfaces';
-
+import './plugins/icon.css'
 export default Vue.extend({
   name: 'App',
   store,

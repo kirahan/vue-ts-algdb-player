@@ -195,19 +195,19 @@ export default class Puzzles extends Vue{
     }
 
     refreshcubesize(){
-      const width = window.innerWidth
+          const width = window.innerWidth
           // let size = []
           if(width<600){
-                  this.cubesize = [125,125]
-              }else if(width<960){
-                  this.cubesize = [100,100]
-              }else if(width<1264){
-                  this.cubesize = [150,150]
-              }else if(width<1904){
-                  this.cubesize = [200,200]
-              }else{
-                  this.cubesize = [250,250]
-              }
+              this.cubesize = [125,125]
+          }else if(width<960){
+              this.cubesize = [100,100]
+          }else if(width<1264){
+              this.cubesize = [150,150]
+          }else if(width<1904){
+              this.cubesize = [200,200]
+          }else{
+              this.cubesize = [250,250]
+          }
     }
 
     refreshtitlestyle (): string {

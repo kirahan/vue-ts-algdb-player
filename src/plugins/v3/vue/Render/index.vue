@@ -106,103 +106,196 @@ export default class Render extends Vue{
         }
     }
 
+    @Watch('cubeconfig')
+    onCubeConfigChange(){
+        this.loadCubeConfig()
+    }
+
     constructor(){
         super()
-        
         // 生成一个魔方
         this.world = this.worldin ? this.worldin : new World()
         this.preferance = new Preferance(this.world)
-        // 读取总体模板
-        if(this.cubeconfig.model){
-            try{
-                let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:${this.cubeconfig.model}`))
-                this.renderconfig = config.renderconfig
-                this.playerconfig = config.playerconfig
-                this.preferanceconfig = config.preferanceconfig
-            }catch{
-                let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:casegroup`))
-                this.renderconfig = config.renderconfig
-                this.playerconfig = config.playerconfig
-                this.preferanceconfig = config.preferanceconfig
-            }
-        }
-        // 读取render模板
-        if(this.cubeconfig.renderModelName){
-            try{
-                let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:${this.cubeconfig.renderModelName}`))
-                this.renderconfig = config
-            }catch{
-                let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:casegroup`))
-                this.renderconfig = config
-            }
-        }
-
-        
-        // 读取preferance模板
-        if(this.cubeconfig.preferanceModelName){
-            try{
-                let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:${this.cubeconfig.preferanceModelName}`))
-                this.preferanceconfig = config
-            }catch{
-                let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:casegroup`))
-                this.preferanceconfig = config
-            }
-        }
-        // 读取单独配置的renderconfig和preferanceconfig和playerconfig
-        for(let param in this.cubeconfig.renderconfig){
-            this.renderconfig[param] = this.cubeconfig.renderconfig[param]
-        }
-
-        for(let param in this.cubeconfig.preferanceconfig){
-            this.preferanceconfig[param] = this.cubeconfig.preferanceconfig[param]
-        }
-
-        for(let param in this.cubeconfig.playerconfig){
-            this.playerconfig[param] = this.cubeconfig.playerconfig[param]
-        }
-
-        
-
-
-        // 保存主要配置
-        this.size = this.cubesize ? this.cubesize : (this.renderconfig.size || [200,200])
-        this.cubename = this.cubeconfig.cubename
-        this.CoverImgOn = this.renderconfig.coverImgNotModel
-        this.world.order = this.renderconfig.order || 3
-
-        // 不能再阶数选择之前
-        this.preferance.load(JSON.stringify(this.preferanceconfig))
-        this.preferance.refresh()
-
-
-        // 设置遮罩层
-        if(this.world.order==3 && this.renderconfig.masktype){
-            try{
-                const strip = CubeStageMask[this.renderconfig.masktype].strip
-                if(strip){
-                    this.world.cube.strip(strip)
+             // 读取总体模板
+                if(this.cubeconfig.model){
+                    try{
+                        let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:${this.cubeconfig.model}`))
+                        this.renderconfig = config.renderconfig
+                        this.playerconfig = config.playerconfig
+                        this.preferanceconfig = config.preferanceconfig
+                    }catch{
+                        let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:casegroup`))
+                        this.renderconfig = config.renderconfig
+                        this.playerconfig = config.playerconfig
+                        this.preferanceconfig = config.preferanceconfig
+                    }
                 }
-            }catch{
+                // 读取render模板
+                if(this.cubeconfig.renderModelName){
+                    try{
+                        let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:${this.cubeconfig.renderModelName}`))
+                        this.renderconfig = config
+                    }catch{
+                        let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:casegroup`))
+                        this.renderconfig = config
+                    }
+                }
 
-            }
-            
+                
+                // 读取preferance模板
+                if(this.cubeconfig.preferanceModelName){
+                    try{
+                        let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:${this.cubeconfig.preferanceModelName}`))
+                        this.preferanceconfig = config
+                    }catch{
+                        let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:casegroup`))
+                        this.preferanceconfig = config
+                    }
+                }
+                // 读取单独配置的renderconfig和preferanceconfig和playerconfig
+                for(let param in this.cubeconfig.renderconfig){
+                    this.renderconfig[param] = this.cubeconfig.renderconfig[param]
+                }
+
+                for(let param in this.cubeconfig.preferanceconfig){
+                    this.preferanceconfig[param] = this.cubeconfig.preferanceconfig[param]
+                }
+
+                for(let param in this.cubeconfig.playerconfig){
+                    this.playerconfig[param] = this.cubeconfig.playerconfig[param]
+                }
+
+                // 保存主要配置
+                this.size = this.cubesize ? this.cubesize : (this.renderconfig.size || [200,200])
+                this.cubename = this.cubeconfig.cubename
+                this.CoverImgOn = this.renderconfig.coverImgNotModel
+                this.world.order = this.renderconfig.order || 3
+
+                // 不能再阶数选择之前
+                this.preferance.load(JSON.stringify(this.preferanceconfig))
+                this.preferance.refresh()
+
+
+                // 设置遮罩层
+                if(this.world.order==3 && this.renderconfig.masktype){
+                    try{
+                        const strip = CubeStageMask[this.renderconfig.masktype].strip
+                        if(strip){
+                            this.world.cube.strip(strip)
+                        }
+                    }catch{
+
+                    }
+                    
+                }
+
+                this.world.cube.dirty = true
+
+                // 设置初始action
+                this.action = this.renderconfig.scene == "^" ? "(" + this.renderconfig.alg + ")'" : this.renderconfig.alg
+
+                if(this.action){
+                    this.world.twister.finish();
+                    this.world.twister.twist("#");
+                    this.world.twister.twist(this.action, false, 1, true);
+                    this.world.cube.history.clear();
+                }
+
+                // 魔方是否锁定，用controler 不能用 cube
+                this.world.controller.lock = this.playerconfig.lock
+    }
+
+
+    loadCubeConfig(){
+        if(this.cubeconfig){
+                    // 读取总体模板
+                if(this.cubeconfig.model){
+                    try{
+                        let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:${this.cubeconfig.model}`))
+                        this.renderconfig = config.renderconfig
+                        this.playerconfig = config.playerconfig
+                        this.preferanceconfig = config.preferanceconfig
+                    }catch{
+                        let config: CubeCongfig = JSON.parse(window.localStorage.getItem(`cubeconfig:casegroup`))
+                        this.renderconfig = config.renderconfig
+                        this.playerconfig = config.playerconfig
+                        this.preferanceconfig = config.preferanceconfig
+                    }
+                }
+                // 读取render模板
+                if(this.cubeconfig.renderModelName){
+                    try{
+                        let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:${this.cubeconfig.renderModelName}`))
+                        this.renderconfig = config
+                    }catch{
+                        let config: RenderConfig = JSON.parse(window.localStorage.getItem(`render:casegroup`))
+                        this.renderconfig = config
+                    }
+                }
+
+                
+                // 读取preferance模板
+                if(this.cubeconfig.preferanceModelName){
+                    try{
+                        let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:${this.cubeconfig.preferanceModelName}`))
+                        this.preferanceconfig = config
+                    }catch{
+                        let config: PreferanceConfig = JSON.parse(window.localStorage.getItem(`preferance:casegroup`))
+                        this.preferanceconfig = config
+                    }
+                }
+                // 读取单独配置的renderconfig和preferanceconfig和playerconfig
+                for(let param in this.cubeconfig.renderconfig){
+                    this.renderconfig[param] = this.cubeconfig.renderconfig[param]
+                }
+
+                for(let param in this.cubeconfig.preferanceconfig){
+                    this.preferanceconfig[param] = this.cubeconfig.preferanceconfig[param]
+                }
+
+                for(let param in this.cubeconfig.playerconfig){
+                    this.playerconfig[param] = this.cubeconfig.playerconfig[param]
+                }
+
+                // 保存主要配置
+                this.size = this.cubesize ? this.cubesize : (this.renderconfig.size || [200,200])
+                this.cubename = this.cubeconfig.cubename
+                this.CoverImgOn = this.renderconfig.coverImgNotModel
+                this.world.order = this.renderconfig.order || 3
+
+                // 不能再阶数选择之前
+                this.preferance.load(JSON.stringify(this.preferanceconfig))
+                this.preferance.refresh()
+
+
+                // 设置遮罩层
+                if(this.world.order==3 && this.renderconfig.masktype){
+                    try{
+                        const strip = CubeStageMask[this.renderconfig.masktype].strip
+                        if(strip){
+                            this.world.cube.strip(strip)
+                        }
+                    }catch{
+
+                    }
+                    
+                }
+
+                this.world.cube.dirty = true
+
+                // 设置初始action
+                this.action = this.renderconfig.scene == "^" ? "(" + this.renderconfig.alg + ")'" : this.renderconfig.alg
+
+                if(this.action){
+                    this.world.twister.finish();
+                    this.world.twister.twist("#");
+                    this.world.twister.twist(this.action, false, 1, true);
+                    this.world.cube.history.clear();
+                }
+
+                // 魔方是否锁定，用controler 不能用 cube
+                this.world.controller.lock = this.playerconfig.lock
         }
-
-        this.world.cube.dirty = true
-
-        // 设置初始action
-        this.action = this.renderconfig.scene == "^" ? "(" + this.renderconfig.alg + ")'" : this.renderconfig.alg
-
-        if(this.action){
-            this.world.twister.finish();
-            this.world.twister.twist("#");
-            this.world.twister.twist(this.action, false, 1, true);
-            this.world.cube.history.clear();
-        }
-
-        // 魔方是否锁定，用controler 不能用 cube
-        this.world.controller.lock = this.playerconfig.lock
-
     }
 
     resize(width: number, height: number) {
@@ -383,8 +476,11 @@ export default class Render extends Vue{
                 this.coverimg.style.display = ''
                 this.coverimg.style.objectFit = 'contain'
                 this.coverimg.src = content
+                cancelAnimationFrame(this.loop_id)
+            }else{
+
             }
-            cancelAnimationFrame(this.loop_id)
+            
         }
     }
 

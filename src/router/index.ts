@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import showSetOrSubSet  from '../components/showSetOrSubSet.vue'
 import showCaseGroup  from '../components/v3showCaseGroup.vue'
-import showCase from '../components/showCase.vue';
+import showCase from '../components/v3showCase.vue';
 import test from '../components/test.vue';
 import v3  from '../components/v3cube.vue'
 Vue.use(VueRouter)
