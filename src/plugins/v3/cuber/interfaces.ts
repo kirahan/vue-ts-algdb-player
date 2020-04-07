@@ -2,6 +2,7 @@ import Toucher from '../common/toucher';
 import World from "./world";
 
 export class PreferanceConfig{
+    version?: string 
     scale?: number
     perspective?: number
     angle?: number
@@ -13,6 +14,7 @@ export class PreferanceConfig{
     shadow?: boolean
 
     constructor(){
+        this.version = '0.1'
         this.scale= 50
         this.perspective= 50
         this.angle= 63
@@ -30,11 +32,13 @@ export class Playerconfig{
         loop?: boolean
         hoverplay?: boolean
         lock?: boolean
+        breath?: boolean
         constructor(){
         this.autoplay = false,
         this.loop = false,
         this.hoverplay = true,
         this.lock = false
+        this.breath = false
         }
 }
 
@@ -45,9 +49,7 @@ export interface RenderConfig{
     scene?: string
     masktype?: string,
     size?: number[],
-    template?: string,
     coverImgNotModel?: boolean,
-    preferance?: PreferanceConfig
 }
 
 export interface CubeCongfig {
@@ -55,6 +57,8 @@ export interface CubeCongfig {
     model?: string,
     renderModelName?: string,
     renderconfig?: RenderConfig,
+    preferanceModelName?: string,
+    preferanceconfig?: PreferanceConfig,
     playerconfig?: Playerconfig
 }
 

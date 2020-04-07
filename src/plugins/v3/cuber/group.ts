@@ -133,6 +133,8 @@ export default class CubeGroup extends Group {
         }
       });
     }
+
+    
   }
 
   rotate(cubelet: Cubelet) {

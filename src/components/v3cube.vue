@@ -1,6 +1,7 @@
 <template>
     <div>
-        <Render :worldin="world" :cubeconfig="Configs[0]" ref="render"></Render>
+        <!-- <Render :worldin="world" :cubeconfig="Configs[0]" ref="render"></Render> -->
+        <div style="height:10px;background-color:red"></div>
         <Render  :cubeconfig="Configs[1]" ></Render>
     </div>
 </template>
@@ -33,17 +34,14 @@ export default class cube extends Vue{
 
     Configs: CubeCongfig[] = [{
             cubename : "cube1",
-            model: 'xxx',
+            model: 'casegroup',
             renderconfig:{
                 order: 3,
                 size: [300,300],
-                template: 'playground',
                 coverImgNotModel: true,
                 scene:'^',
                 alg: "RUR",
-                masktype: '',
-                preferance: {
-                }
+                masktype: ''
             },
             playerconfig: {
                 autoplay: false,
@@ -54,23 +52,21 @@ export default class cube extends Vue{
         },
         {
             cubename : "cube2",
-            model: 'xxx',
+            model: 'casegroup',
             renderconfig:{
-                order: 3,
-                size: [300,300],
-                template: 'playground',
+                order: 2,
                 coverImgNotModel: false,
                 scene:'^',
-                alg: "RUR",
-                masktype: '',
-                preferance: {
-                }
+                alg: '',
             },
-            playerconfig: {
-                autoplay: false,
-                loop: true,
+            preferanceconfig:{
+                hollow: true
+            },
+            playerconfig:{
                 hoverplay: false,
-                lock: true
+                lock:false,
+                breath:true
+                
             }
         }]
 
@@ -82,9 +78,9 @@ export default class cube extends Vue{
     }
 
     mounted(){
-        // this.canvasref = this.cube1
-        // console.log(this.world)
-        // console.log(this.canvasref)
+
+        
+
     }
 
 

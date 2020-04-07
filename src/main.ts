@@ -17,9 +17,10 @@ Vue.prototype.$http = axios.create({
 })
 
 
-new Vue({
+let vm = new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+export default vm;

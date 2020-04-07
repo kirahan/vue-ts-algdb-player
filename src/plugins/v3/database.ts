@@ -1,6 +1,6 @@
 import World from "./cuber/world";
 import CubeGroup from "./cuber/group";
-// import vm from ".";
+import vm from "../../main";
 
 export class Preferance {
   private world: World;

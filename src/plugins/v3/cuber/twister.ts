@@ -51,7 +51,7 @@ export default class Twister {
     tweener.finish();
   }
 
-  twist(exp: string, reverse = false, times = 1, fast = false) {
+  twist(exp: string, reverse = false, times = 1, fast = false, callback: Function | null = null) {
     if (this.queue.length > 0) {
       tweener.finish();
       this.update();
@@ -63,8 +63,38 @@ export default class Twister {
       element.fast = fast;
       this.queue.push(element);
     }
+
+    // 如果传参有callback就把callback挂载在list的最后一个action上
+    // 这样就实现了，最后一步执行完之后调用callback
+    if(callback){
+      list[list.length-1].callback = callback
+    }
     this.update();
+
   }
+
+  // twist(
+  //   exp: string,
+  //   reverse: boolean = false,
+  //   times: number = 1,
+  //   callback: Function | null = null,
+  //   fast: boolean = false
+  // ) {
+  //   let list = new TwistNode(exp, reverse, times).parse();
+  //   if (fast) {
+  //     if (callback) {
+  //       callback();
+  //     }
+  //   } else {
+  //     list[list.length - 1].callback = callback;
+  //     list.forEach(function (element) {
+  //       this._queue.push(element);
+  //     }, this);
+  //   }
+  // }
+
+
+
 
   push(action: TwistAction) {
     this.queue.push(action);
@@ -121,7 +151,15 @@ export default class Twister {
       part.angle = angle;
     }
     part.twist(angle);
-    return;
+
+    // 如果这个action上挂载有callback就执行
+    setTimeout(() => {
+      if(action.callback){
+        action.callback()
+      }
+      return;
+    }, 800);
+    
   }
 
   undo() {
@@ -143,7 +181,8 @@ export class TwistAction {
   reverse: boolean;
   times: number;
   fast: boolean;
-  constructor(exp: string, reverse: boolean = false, times: number = 1, fast: boolean = false) {
+  callback: Function | null
+  constructor(exp: string, reverse: boolean = false, times: number = 1, fast: boolean = false,callback: Function | null = null) {
     this.exp = exp;
     this.reverse = reverse;
     this.times = times;

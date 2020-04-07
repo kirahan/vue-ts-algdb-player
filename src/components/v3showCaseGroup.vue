@@ -125,24 +125,12 @@ export default class Puzzles extends Vue{
         for(let casegroup of this.caseGroups){
           this.cubeconfig.push({
             cubename : casegroup.name,
-            model: 'xxx',
+            model: 'casegroup',
             renderconfig:{
                 order: casegroup.puzzle == '222'? 2: 3,
-                size: this.cubesize,
-                template: 'playground',
-                coverImgNotModel: true,
                 scene:'^',
                 alg: casegroup.genAlgs,
-                masktype: casegroup.groupName,
-                preferance: {
-                    
-                }
-            },
-            playerconfig: {
-                autoplay: false,
-                loop: true,
-                hoverplay: true,            
-                lock: true
+                masktype: casegroup.groupName
             }
         })
     }

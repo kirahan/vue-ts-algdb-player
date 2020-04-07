@@ -119,6 +119,8 @@
 import Vue from 'vue';
 import {mapState} from 'vuex'
 import store from './store'
+import { CubeCongfig } from './plugins/v3/cuber/interfaces';
+
 export default Vue.extend({
   name: 'App',
   store,
@@ -149,10 +151,54 @@ export default Vue.extend({
     this.windowSize =  { x: window.innerWidth, y: window.innerHeight }
     this.usephoneLayout = this.windowSize.x<600 ? true : false
   },
+
+  mounted(){
+    let temp: CubeCongfig = {
+            model: 'casegroup',
+            renderModelName: 'casegroup',
+            renderconfig:{
+                order: 3,
+                size: [300,300],
+                coverImgNotModel: true,
+                scene:'',
+                alg: "",
+                masktype: ''
+            },
+            preferanceModelName: 'casegroup',
+            preferanceconfig: {
+                    version: "0.1",
+                    scale: 50,
+                    perspective: 50,
+                    angle: 60,
+                    gradient: 65,
+                    frames: 20,
+                    sensitivity: 3,
+                    mirror: false,
+                    hollow: false,
+                    shadow: true,
+                },
+            playerconfig: {
+                autoplay: false,
+                loop: false,
+                hoverplay: true,
+                lock: true,
+                breath: false
+            }
+        }
+
+        let ren = JSON.stringify(temp.renderconfig)
+        let pre = JSON.stringify(temp.preferanceconfig)
+        let caseg = JSON.stringify(temp)
+        window.localStorage.setItem('render:casegroup', ren)
+        window.localStorage.setItem('preferance:casegroup', pre)
+        window.localStorage.setItem('cubeconfig:casegroup', caseg)
+  },
   computed:{
     ...mapState({
       Navigation : store => store['Navigation']
     })
+
+    
   }
 });
 </script>
