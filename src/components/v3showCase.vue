@@ -171,6 +171,21 @@ import Playbar from '../plugins/v3/vue/Playbar/index.vue';
 import { CubeCongfig } from '../plugins/v3/cuber/interfaces'
 import World from '../plugins/v3/cuber/world';
 /* eslint-disable @typescript-eslint/no-inferrable-types */
+
+interface algdbcase {
+    class?: string
+    puzzle?: string
+    groupName?: string
+    caseName?: string
+    name?: string
+    shortName?: string
+    caseGroupWholeName?: string
+    genAlgs?: string
+    imageSrc?: string
+    updatedAt?: string
+    caseAlgs?: object[]
+}
+
 @Component({name:'showCase',components:{Render,Playbar}})
 export default class Puzzles extends Vue{
 
@@ -214,7 +229,7 @@ export default class Puzzles extends Vue{
         imagesize:125
     }
 
-    Cases: object = {}
+    Cases: algdbcase = {}
 
     usephoneLayout: boolean = false 
     titlestyle: string = 'font-size:12px'

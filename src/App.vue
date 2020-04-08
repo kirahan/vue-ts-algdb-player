@@ -2,44 +2,49 @@
   <v-app v-resize="onresize">
      <v-navigation-drawer
       v-model="drawer"
-      color="teal"
+      class="teal lighten-1"
+      width=500
       dark
       right
       app
       disable-resize-watcher
     >
-      <v-list dense>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>快速访问</v-list-item-title>
-          </v-list-item-content>
+      <v-list nav
+        class="py-2">
+
+        <v-list-item>
+            <v-list-item-avatar>
+              <img src="https://randomuser.me/api/portraits/men/81.jpg">
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title class="title">
+                KiraHan
+                <v-btn color="purple" right absolute small >退出</v-btn>
+              </v-list-item-title>
+            </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-settings</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Settings</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-settings</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-              <p>2d</p>
-              <v-switch
-              v-model="show2dOr3d"
-              label="success"
-              color="success"
-              value="3d"
-              hide-details
-            ></v-switch>
-          </v-list-item-content>
-        </v-list-item>
+        <v-divider></v-divider>
+        <v-subheader >赞助商</v-subheader>
+        <Sponsor></Sponsor>
+
+
+        <v-divider></v-divider>
+        <v-subheader>账号</v-subheader>
+        <Account></Account>
+      
+        <v-divider></v-divider>
+        <v-subheader>虚拟魔方</v-subheader>
+        <Vscube></Vscube>
+
+        <v-divider></v-divider>
+        <v-subheader>热门</v-subheader>
+        <Hot></Hot>
+
+        <v-divider></v-divider>
+        <v-subheader>统计</v-subheader>
+        <Statistic></Statistic>
+      
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -63,6 +68,20 @@
           label="search a case"
           solo-inverted
         ></v-autocomplete>
+      
+
+      
+      <v-btn icon color=""><v-icon>mdi-fullscreen</v-icon></v-btn>
+      <v-btn icon color="">
+        <v-badge
+          overlap
+          color="red"
+          content="6"
+          >
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
+        
+      </v-btn>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     
     </v-app-bar>
@@ -108,6 +127,9 @@
 
     <v-footer app v-if="!usephoneLayout" >
       <span>&copy; 2020</span>
+      <v-btn right text absolute :href="githuburl" target="_blank">
+        <v-icon>mdi-github</v-icon>
+      </v-btn >
     </v-footer>
 
 
@@ -117,40 +139,59 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {mapState} from 'vuex'
-import store from './store'
+import {Component, Prop, Ref, Provide} from 'vue-property-decorator'
+import {
+  State,
+  Getter,
+  Action,
+  Mutation,
+  namespace
+} from 'vuex-class'
 import { CubeCongfig } from './plugins/v3/cuber/interfaces';
 import './plugins/icon.css'
-export default Vue.extend({
-  name: 'App',
-  store,
-  components: {
-  },
-  data: () => ({
-      activeBtn:1,
-      drawer: false,
-      select:null,
-      items:[],
-      search:null,
-      loading:null,
-      config:true,
-      show2dOr3d:false,
-      usephoneLayout:null,
-      windowSize: { x: 0,y:0}
-  }),
-  methods:{
-    gotoMain(){
+import Statistic from './components/statistic.vue'
+import Sponsor from './components/sponsor.vue'
+import Hot from './components/hot.vue'
+import Account from './components/account/index.vue'
+import Vscube from './components/vscube/index.vue'
+
+
+
+@Component({name:'App',components:{Account,Hot,Vscube,Sponsor,Statistic}})
+export default class App extends Vue{
+  constructor(){
+    super()
+  }
+
+  @State Navigation
+  @Action setNavigation
+
+  activeBtn: number = 1
+  drawer:boolean = false
+  select:boolean = null
+  items = []
+  search = null
+  loading:boolean = null
+  config:boolean =  true
+  show2dOr3d:boolean = false
+  usephoneLayout: boolean = false
+  windowSize = { x: 0,y:0}
+  githuburl:string = 'https://github.com/kirahan/vue-ts-algdb-player'
+  
+
+  gotoMain(){
       this.$router.push('/')
-    },
-    onresize(){
-        this.windowSize =  { x: window.innerWidth, y: window.innerHeight }
-        this.usephoneLayout = this.windowSize.x<600 ? true : false
     }
-  },
+  onresize(){
+      this.windowSize =  { x: window.innerWidth, y: window.innerHeight }
+      this.usephoneLayout = this.windowSize.x <600 ? true : false
+  }
   created(){
     this.windowSize =  { x: window.innerWidth, y: window.innerHeight }
-    this.usephoneLayout = this.windowSize.x<600 ? true : false
-  },
+    this.usephoneLayout = this.windowSize.x <600 ? true : false
+    const nav: object[] = []
+    this.setNavigation(nav)
+  }
 
   mounted(){
     let temp: CubeCongfig = {
@@ -192,13 +233,7 @@ export default Vue.extend({
         window.localStorage.setItem('render:casegroup', ren)
         window.localStorage.setItem('preferance:casegroup', pre)
         window.localStorage.setItem('cubeconfig:casegroup', caseg)
-  },
-  computed:{
-    ...mapState({
-      Navigation : store => store['Navigation']
-    })
-
-    
   }
-});
+}
+
 </script>
