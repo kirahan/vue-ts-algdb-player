@@ -12,78 +12,85 @@
       <v-list nav
         class="py-2">
 
-        <v-list-item>
-            <v-list-item-avatar>
-              <img src="https://randomuser.me/api/portraits/men/81.jpg">
-            </v-list-item-avatar>
+          <v-list-item>
+              <v-list-item-avatar>
+                <img src="https://randomuser.me/api/portraits/men/81.jpg">
+              </v-list-item-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title class="title">
-                KiraHan
-                <v-btn color="purple" right absolute small >退出</v-btn>
-              </v-list-item-title>
-            </v-list-item-content>
-        </v-list-item>
-        <v-divider></v-divider>
-        <v-subheader >赞助商</v-subheader>
-        <Sponsor :model="sponsorindex"></Sponsor>
+              <v-list-item-content>
+                <v-list-item-title class="title">
+                  KiraHan
+                  <v-btn color="purple" right absolute small >退出</v-btn>
+                </v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
 
 
-        <v-divider></v-divider>
-        <v-subheader>账号</v-subheader>
-        <Account></Account>
-      
-        <v-divider></v-divider>
-        <v-subheader>虚拟魔方</v-subheader>
-        <Vscube ref="vscube" @setsponsorindex="setSponsorIndex"></Vscube>
+          <v-divider></v-divider>
+          
+          <Cubesample v-if="showcubesample" ></Cubesample>
+          <div v-else>
+            <v-subheader  >赞助商</v-subheader>
+            <Sponsor :model="sponsorindex"></Sponsor>
+          </div>
+          
+          <v-divider></v-divider>
+          <v-subheader>虚拟魔方</v-subheader>
+          <Vscube ref="vscube" @switch2cubesample="showcubesample=true"></Vscube>
 
-        <v-divider></v-divider>
-        <v-subheader>热门</v-subheader>
-        <Hot></Hot>
+          <v-divider></v-divider>
+          <v-subheader>账号</v-subheader>
+          <Account></Account>
 
-        <v-divider></v-divider>
-        <v-subheader>统计</v-subheader>
-        <Statistic ref="stats"></Statistic>
+          <v-divider></v-divider>
+          <v-subheader>热门</v-subheader>
+          <Hot></Hot>
+
+          <v-divider></v-divider>
+          <v-subheader>统计</v-subheader>
+          <Statistic ref="stats"></Statistic>
       
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-      app
-      clipped
-      color="purple"
-      dark
-    >
-      <v-toolbar-title style="cursor:pointer"  @click="gotoMain()">AlgDb.Player</v-toolbar-title>
-       <v-autocomplete
-          v-model="select"
-          :loading="loading"
-          :items="items"
-          :search-input.sync="search"
-          clearable
-          cache-items
-          class="mx-4"
-          flat
-          hide-no-data
-          hide-details
-          label="search a case"
-          solo-inverted
-        ></v-autocomplete>
-      
 
-      
-      <v-btn icon color=""><v-icon>mdi-fullscreen</v-icon></v-btn>
-      <v-btn icon color="">
-        <v-badge
-          overlap
-          color="red"
-          content="6"
-          >
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
+
+    <v-app-bar
+        app
+        clipped
+        color="purple"
+        dark
+      >
+        <v-toolbar-title style="cursor:pointer"  @click="gotoMain()">AlgDb.Player</v-toolbar-title>
+        <v-autocomplete
+            v-model="select"
+            :loading="loading"
+            :items="items"
+            :search-input.sync="search"
+            clearable
+            cache-items
+            class="mx-4"
+            flat
+            hide-no-data
+            hide-details
+            label="search a case"
+            solo-inverted
+          ></v-autocomplete>
         
-      </v-btn>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-    
+
+        
+        <v-btn icon color=""><v-icon>mdi-fullscreen</v-icon></v-btn>
+        <v-btn icon color="">
+          <v-badge
+            overlap
+            color="red"
+            content="6"
+            >
+              <v-icon>mdi-bell</v-icon>
+            </v-badge>
+          
+        </v-btn>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      
     </v-app-bar>
 
     
@@ -104,12 +111,12 @@
 
 
     <v-bottom-navigation
-    :value="activeBtn"
-    grow
-    app
-    color="teal"
-    v-if="usephoneLayout"
-    >
+      :value="activeBtn"
+      grow
+      app
+      color="teal"
+      v-if="usephoneLayout"
+      >
         <v-btn>
           <span>Recents</span>
           <v-icon>mdi-history</v-icon>
@@ -155,10 +162,11 @@ import Sponsor from './components/sponsor.vue'
 import Hot from './components/hot.vue'
 import Account from './components/account/index.vue'
 import Vscube from './components/vscube/index.vue'
+import Cubesample from './components/cubesample.vue'
 
 
 
-@Component({name:'App',components:{Account,Hot,Vscube,Sponsor,Statistic}})
+@Component({name:'App',components:{Account,Cubesample,Hot,Vscube,Sponsor,Statistic}})
 export default class App extends Vue{
   constructor(){
     super()
@@ -170,9 +178,12 @@ export default class App extends Vue{
 
   @Ref('stats') statistic: Statistic  
   @Ref('vscube') vscube: Vscube  
+  @Ref('cubesample') cubesample: Cubesample
 
   // -1 means cycle model
   sponsorindex: number = -1
+  showcubesample: boolean = false
+
 
   activeBtn: number = 1
   drawer:boolean = false
@@ -191,8 +202,7 @@ export default class App extends Vue{
   onDrawerChange(newvalue){
     if(newvalue){
       this.statistic.gsapdata()
-      // set sponsor page cycle model
-      this.setSponsorIndex({data:-1})
+      this.showcubesample = false
     }else{
       // 折叠vscode的设置面板
       this.vscube.tab = ''

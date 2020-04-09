@@ -164,12 +164,20 @@ export default class Account extends Vue{
         }
     }
 
+    @Emit('switch2cubesample')
+    Switch2CubeSample(){
+        return true
+    }
+
+
     @Watch('tab')
     onTabChange(){
-        // 如果tab有值就将sponsor模块的页面切换到第一页，也就是虚拟魔方页面
-        if(this.tab){
-            this.setSponsorIndex(0)
-        }
+
+        // 如果tab有值就将sponsor模块的页面切换到第一页
+        // this.setSponsorIndex(0)
+
+        // 不使用sponsor 切换到 示例魔方页面
+        this.Switch2CubeSample()
         
 
     }
