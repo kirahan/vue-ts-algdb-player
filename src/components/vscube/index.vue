@@ -67,7 +67,7 @@
                                 <v-expansion-panel-content>
                                     <v-row no-gutters >
                                         <v-col cols=2>
-                                            <p class="title" style="line-height:100px">自定义</p>
+                                            <p class="title " style="line-height:100px">自定义</p>
                                         </v-col>
                                         <v-col cols=10>
                                             <v-row no-gutters>
@@ -134,7 +134,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {Component, Prop, Ref, Provide} from 'vue-property-decorator'
+import {Component, Prop, Ref, Provide, Watch, Emit} from 'vue-property-decorator'
 
 @Component({name:'Account',components:{}})
 export default class Account extends Vue{
@@ -157,6 +157,22 @@ export default class Account extends Vue{
     message: string = ''
     timeout = 2000
 
+    @Emit('setsponsorindex')
+    setSponsorIndex(value){
+        return {
+            data : value
+        }
+    }
+
+    @Watch('tab')
+    onTabChange(){
+        // 如果tab有值就将sponsor模块的页面切换到第一页，也就是虚拟魔方页面
+        if(this.tab){
+            this.setSponsorIndex(0)
+        }
+        
+
+    }
 
     mounted(){
         this.bottom = window.localStorage.getItem('bottomlayer')

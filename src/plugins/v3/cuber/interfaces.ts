@@ -33,12 +33,14 @@ export class Playerconfig{
         hoverplay?: boolean
         lock?: boolean
         breath?: boolean
+        autorotate?: boolean
         constructor(){
         this.autoplay = false,
         this.loop = false,
         this.hoverplay = true,
         this.lock = false
         this.breath = false
+        this.autorotate = false
         }
 }
 

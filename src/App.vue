@@ -26,7 +26,7 @@
         </v-list-item>
         <v-divider></v-divider>
         <v-subheader >赞助商</v-subheader>
-        <Sponsor></Sponsor>
+        <Sponsor :model="sponsorindex"></Sponsor>
 
 
         <v-divider></v-divider>
@@ -35,7 +35,7 @@
       
         <v-divider></v-divider>
         <v-subheader>虚拟魔方</v-subheader>
-        <Vscube></Vscube>
+        <Vscube ref="vscube" @setsponsorindex="setSponsorIndex"></Vscube>
 
         <v-divider></v-divider>
         <v-subheader>热门</v-subheader>
@@ -169,6 +169,10 @@ export default class App extends Vue{
 
 
   @Ref('stats') statistic: Statistic  
+  @Ref('vscube') vscube: Vscube  
+
+  // -1 means cycle model
+  sponsorindex: number = -1
 
   activeBtn: number = 1
   drawer:boolean = false
@@ -187,8 +191,18 @@ export default class App extends Vue{
   onDrawerChange(newvalue){
     if(newvalue){
       this.statistic.gsapdata()
+      // set sponsor page cycle model
+      this.setSponsorIndex({data:-1})
+    }else{
+      // 折叠vscode的设置面板
+      this.vscube.tab = ''
     }
   }
+
+  //设置sponsor页面的index
+  setSponsorIndex(command){
+        this.sponsorindex = command.data
+    }
 
   gotoMain(){
       this.$router.push('/')
@@ -239,13 +253,19 @@ export default class App extends Vue{
             }
         }
 
-        let ren = JSON.stringify(temp.renderconfig)
-        let pre = JSON.stringify(temp.preferanceconfig)
-        let caseg = JSON.stringify(temp)
-        window.localStorage.setItem('render:casegroup', ren)
-        window.localStorage.setItem('preferance:casegroup', pre)
-        window.localStorage.setItem('cubeconfig:casegroup', caseg)
+      let ren = JSON.stringify(temp.renderconfig)
+      let pre = JSON.stringify(temp.preferanceconfig)
+      let caseg = JSON.stringify(temp)
+      window.localStorage.setItem('render:casegroup', ren)
+      window.localStorage.setItem('preferance:casegroup', pre)
+      window.localStorage.setItem('cubeconfig:casegroup', caseg)
+
+      // setTimeout(() => {
+      //   this.sponsorindex = 2
+      //   console.log(this.sponsorindex)
+      // }, 3000);
   }
+
 }
 
 </script>

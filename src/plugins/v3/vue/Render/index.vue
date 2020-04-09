@@ -496,6 +496,14 @@ export default class Render extends Vue{
             this.world.cube.rotation.y = (tick / 12) * Math.PI;
             this.world.cube.updateMatrix();
         }
+
+        // 是否自旋
+        if(this.playerconfig.autorotate){
+            let tick = new Date().getTime();
+            tick = (tick / 2000) * Math.PI;
+            this.world.cube.rotation.y = (tick / 12) * Math.PI;
+            this.world.cube.updateMatrix();
+        }
         try{    
             this.world.cube.dirty = true;
             this.draw();
