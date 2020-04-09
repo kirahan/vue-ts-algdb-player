@@ -28,7 +28,7 @@
 
           <v-divider></v-divider>
           
-          <Cubesample v-if="showcubesample" ></Cubesample>
+          <Cubesample v-if="showcubesample" ref="cubesample"></Cubesample>
           <div v-else>
             <v-subheader  >赞助商</v-subheader>
             <Sponsor :model="sponsorindex"></Sponsor>
@@ -36,7 +36,9 @@
           
           <v-divider></v-divider>
           <v-subheader>虚拟魔方</v-subheader>
-          <Vscube ref="vscube" @switch2cubesample="showcubesample=true"></Vscube>
+          <Vscube ref="vscube" 
+          @setthemecolor="setThemeColors"
+          @switch2cubesample="showcubesample=true"></Vscube>
 
           <v-divider></v-divider>
           <v-subheader>账号</v-subheader>
@@ -155,14 +157,15 @@ import {
   Mutation,
   namespace
 } from 'vuex-class'
-import { CubeCongfig } from './plugins/v3/cuber/interfaces';
+// import { CubeCongfig } from './plugins/v3/cuber/interfaces';
+import { CubeCongfig } from './plugins/v4/cuber/interfaces';
 import './plugins/icon.css'
 import Statistic from './components/statistic.vue'
 import Sponsor from './components/sponsor.vue'
 import Hot from './components/hot.vue'
 import Account from './components/account/index.vue'
 import Vscube from './components/vscube/index.vue'
-import Cubesample from './components/cubesample.vue'
+import Cubesample from './components/v4cubesample.vue'
 
 
 
@@ -229,8 +232,8 @@ export default class App extends Vue{
     this.$vuetify.theme.dark = false
   }
 
-  mounted(){
-    let temp: CubeCongfig = {
+  setlocalstorage(){
+     let temp: CubeCongfig = {
             model: 'casegroup',
             renderModelName: 'casegroup',
             renderconfig:{
@@ -259,21 +262,50 @@ export default class App extends Vue{
                 loop: false,
                 hoverplay: true,
                 lock: true,
-                breath: false
+                breath: false,
+                autorotate:false
+            },
+            themeModelName : 'casegroup',
+            themeconfig:{
+              version: "0.2",
+              dark: false,
+              colors: {
+                    L: "#B71C1C",
+                    R: "#FF6D00",
+                    D: "#FFFFFF",
+                    U: "#FFD600",
+                    F: "#00A020",
+                    B: "#0D47A1",
+                    Core: "#202020",
+                    High: "#FF4081",
+                    Gray: "#606060"
+              }
             }
+            
         }
 
       let ren = JSON.stringify(temp.renderconfig)
       let pre = JSON.stringify(temp.preferanceconfig)
+      let the = JSON.stringify(temp.themeconfig)
       let caseg = JSON.stringify(temp)
+      window.localStorage.setItem('theme:casegroup', the)
       window.localStorage.setItem('render:casegroup', ren)
       window.localStorage.setItem('preferance:casegroup', pre)
       window.localStorage.setItem('cubeconfig:casegroup', caseg)
+  }
+
+  mounted(){
+   
 
       // setTimeout(() => {
       //   this.sponsorindex = 2
       //   console.log(this.sponsorindex)
       // }, 3000);
+  }
+
+
+  setThemeColors(config){
+      this.cubesample.render.setThemeColors(config)
   }
 
 }

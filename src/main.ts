@@ -9,6 +9,7 @@ import CubeRenderer from './plugins/cubestack/cuber/renderer'
 
 Vue.config.productionTip = false
 Vue.prototype.$cuberender = new CubeRenderer()
+Vue.prototype.vuetify = vuetify
 
 Vue.prototype.$http = axios.create({
   // baseURL : 'http://localhost:3000'

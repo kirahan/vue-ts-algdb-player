@@ -103,7 +103,7 @@
                                                     <v-col class="colorset" 
                                                         v-for="(style,index) in stylelist" 
                                                         :key="index" 
-                                                        @click="setcolorset(style)"
+                                                        @click="setcolorset($event,style)"
                                                         cols=12>
                                                         <v-row no-gutters>
                                                             <v-col 
@@ -128,7 +128,11 @@
 
                                             <v-col clos=6>
                                                 <v-row no-gutters>
-                                                    <v-col class="colorset" v-for="(style,index) in stylelist" :key="index+1231231" cols=12>
+                                                    <v-col class="colorset" 
+                                                        v-for="(style,index) in stylelist" 
+                                                        :key="index+1231231"
+                                                        @click="setcolorset($event,style)"
+                                                        cols=12>
                                                         <v-row no-gutters>
                                                             <v-col 
                                                             v-for="(face,index) in facelist2"
@@ -352,6 +356,11 @@ export default class Account extends Vue{
         return true
     }
 
+    @Emit('setthemecolor')
+    setthemecolor(data){
+        return data
+    }
+
 
     @Watch('tab')
     onTabChange(){
@@ -372,6 +381,26 @@ export default class Account extends Vue{
     mounted(){
         this.bottom = window.localStorage.getItem('bottomlayer')
         this.resize()
+
+        let themecolor = JSON.parse(window.localStorage.getItem('cubeconfig:casegroup')).themeconfig.colors
+        // bottomlist = [
+        // {name:'蓝',value:'blue',color:'indigo'},
+        // {name:'绿',value:'green',color:'green'},
+        // {name:'黄',value:'yellow',color:'yellow'},
+        // {name:'白',value:'white',color:'grey lighten-1'},
+        // {name:'橙',value:'orange',color:'orange'},
+        // {name:'红',value:'red',color:'red'}
+        // ]
+        
+        this.bottomlist[0].color = themecolor.B
+        this.bottomlist[1].color = themecolor.F
+        this.bottomlist[2].color = themecolor.U
+        this.bottomlist[3].color = themecolor.D
+        this.bottomlist[4].color = themecolor.L
+        this.bottomlist[5].color = themecolor.R
+
+        console.log(this.bottomlist)
+
     }
     setbottomlayer(layername){
         window.localStorage.setItem('bottomlayer', layername)
@@ -385,17 +414,59 @@ export default class Account extends Vue{
         this.clickcolorindex = index
     }
 
+
     setcolor(color){
         // console.log(color)
         console.log(this.clickcolorindex)
         console.log(this.bottomlist)
         this.bottomlist[this.clickcolorindex].color = color
+        switch(this.clickcolorindex){
+            case 0:
+                this.setthemecolor({B:color})
+                break
+            case 1:
+                this.setthemecolor({F:color})
+                break
+            case 2:
+                this.setthemecolor({U:color})
+                break
+            case 3:
+                this.setthemecolor({D:color})
+                break
+            case 4:
+                this.setthemecolor({R:color})
+                break
+            case 5:
+                this.setthemecolor({L:color})
+                break
+            default:
+                break
+        }
         this.colord = false
     }
 
     // 选择一种颜色预设
-    setcolorset(oneset){
-        console.log(oneset)
+    setcolorset(el,oneset){
+        let eles = el.currentTarget.getElementsByClassName('facecolor')
+        let colors = []
+        for (let ele of eles){
+            let color = window.getComputedStyle(ele).backgroundColor
+            colors.push(color)
+        }
+
+        for(let index in colors){
+            this.bottomlist[index].color = colors[index]
+        }
+
+        let colorsobj = {
+            B: colors[0],
+            F: colors[1],
+            U: colors[2],
+            D: colors[3],
+            L: colors[4],
+            R: colors[5]
+        }   
+        this.setthemecolor(colorsobj) 
 
     }
 

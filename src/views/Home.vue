@@ -62,8 +62,8 @@ import {
 } from 'vuex-class'
 import { Ref,Component } from 'vue-property-decorator'
 // import VisualCube from '../plugins/cubestack/vue/Algplayer/index.vue'
-import Render from '../plugins/v3/vue/Render/index.vue';
-import { CubeCongfig } from '../plugins/v3/cuber/interfaces'
+import Render from '../plugins/v4/vue/Render/index.vue';
+import { CubeCongfig } from '../plugins/v4/cuber/interfaces'
 
 
 @Component({
