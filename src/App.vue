@@ -43,7 +43,7 @@
 
         <v-divider></v-divider>
         <v-subheader>统计</v-subheader>
-        <Statistic></Statistic>
+        <Statistic ref="stats"></Statistic>
       
       </v-list>
     </v-navigation-drawer>
@@ -90,6 +90,7 @@
 
     <v-content
         app
+        
         fluid>
         <v-breadcrumbs
         v-if="!usephoneLayout"
@@ -139,7 +140,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component, Prop, Ref, Provide} from 'vue-property-decorator'
+import {Component, Prop, Ref, Provide, Watch} from 'vue-property-decorator'
 import {
   State,
   Getter,
@@ -166,6 +167,9 @@ export default class App extends Vue{
   @State Navigation
   @Action setNavigation
 
+
+  @Ref('stats') statistic: Statistic  
+
   activeBtn: number = 1
   drawer:boolean = false
   select:boolean = null
@@ -179,6 +183,13 @@ export default class App extends Vue{
   githuburl:string = 'https://github.com/kirahan/vue-ts-algdb-player'
   
 
+  @Watch('drawer')
+  onDrawerChange(newvalue){
+    if(newvalue){
+      this.statistic.gsapdata()
+    }
+  }
+
   gotoMain(){
       this.$router.push('/')
     }
@@ -191,6 +202,7 @@ export default class App extends Vue{
     this.usephoneLayout = this.windowSize.x <600 ? true : false
     const nav: object[] = []
     this.setNavigation(nav)
+    this.$vuetify.theme.dark = false
   }
 
   mounted(){
