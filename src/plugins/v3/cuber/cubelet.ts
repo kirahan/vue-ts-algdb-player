@@ -176,7 +176,7 @@ export default class Cubelet extends Group {
     Cubelet.SIZE - 2 * Cubelet._BORDER_WIDTH - Cubelet._STICKER_DEPTH
   );
 
-  private static LAMBERS = (() => {
+  public static LAMBERS = (() => {
     let result: any = {};
     for (const key in COLORS) {
       let color = (<any>COLORS)[key];
@@ -193,7 +193,7 @@ export default class Cubelet extends Group {
     return result;
   })();
 
-  private static BASICS = (() => {
+  public static BASICS = (() => {
     let result: any = {};
     for (const key in COLORS) {
       let color = (<any>COLORS)[key];

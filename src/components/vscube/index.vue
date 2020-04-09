@@ -49,7 +49,7 @@
                                                 class="pa-2 d-flex bottomlayercolor"
                                                 dark
                                                 elevation-0
-                                                tile
+                                                tileindex
                                                 :color="bottomlayer.color"
                                                 @click="setbottomlayer(bottomlayer.name)"
                                                     >
@@ -66,6 +66,8 @@
                                 <v-expansion-panel-header color="purple darken-2 white--text">配色模板</v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                     <v-row no-gutters >
+
+
                                         <v-col cols=2>
                                             <p class="title " style="line-height:100px">自定义</p>
                                         </v-col>
@@ -82,13 +84,76 @@
                                                         elevation-0
                                                         tile
                                                         :color="bottomlayer.color"
-                                                        @click="setcolor(bottomlayer.name)"
+                                                        @click="opencolorselect(index)"
                                                             >
                                                             <v-list-item-subtitle class="caption">{{bottomlayer.name}}</v-list-item-subtitle>
                                                     </v-card>
                                                 </v-col>
                                             </v-row>
                                         </v-col>
+
+
+                                        <v-col cols=12 class="text-center grey--text">
+                                            <span class="title" style="line-height:20px">预设</span>
+                                        </v-col>
+
+                                        <v-row no-gutters>
+                                            <v-col clos=6>
+                                                <v-row no-gutters>
+                                                    <v-col class="colorset" 
+                                                        v-for="(style,index) in stylelist" 
+                                                        :key="index" 
+                                                        @click="setcolorset(style)"
+                                                        cols=12>
+                                                        <v-row no-gutters>
+                                                            <v-col 
+                                                            v-for="(face,index) in facelist"
+                                                            :key="index"
+                                                            cols=2
+                                                                >
+                                                                <v-card
+                                                                    class="pa-2 d-flex facecolor"
+                                                                    dark
+                                                                    elevation-0
+                                                                    tile
+                                                                    :color="face.color+style"
+                                                                        >
+                                                                        <v-list-item-subtitle class="caption">{{face.name}}</v-list-item-subtitle>
+                                                                </v-card>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
+
+                                            <v-col clos=6>
+                                                <v-row no-gutters>
+                                                    <v-col class="colorset" v-for="(style,index) in stylelist" :key="index+1231231" cols=12>
+                                                        <v-row no-gutters>
+                                                            <v-col 
+                                                            v-for="(face,index) in facelist2"
+                                                            :key="index"
+                                                            cols=2
+                                                                >
+                                                                <v-card
+                                                                    class="pa-2 d-flex facecolor"
+                                                                    dark
+                                                                    elevation-0
+                                                                    tile
+                                                                    :color="face.color+style"
+                                                                        >
+                                                                        <v-list-item-subtitle class="caption">{{face.name}}</v-list-item-subtitle>
+                                                                </v-card>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
+
+                                        </v-row>
+
+                                        
+
                                         
                                     </v-row>
                                 </v-expansion-panel-content>
@@ -128,22 +193,58 @@
         Close
       </v-btn>
     </v-snackbar>
-    </v-container> 
 
+
+
+        <v-bottom-sheet 
+            dark
+            inset
+            v-model="colord">
+                <v-card flat style="margin: auto; touch-action: none; user-select: none;">
+                    <v-container fluid grid-list-md text-xs-center :style="{width:Math.min(size * 8, width) + 'px'}">
+                        <v-layout row wrap>
+                        <v-flex v-for="item in palette" :key="item" xs2 :style="{padding:size * 0.06 + 'px'}">
+                            <v-btn
+                            @click="setcolor(item);"
+                            :color="item"
+                            block
+                            depressed
+                            style="min-width: 0%; min-height: 0%; margin: 0%; padding: 0%;"
+                            :height="size"
+                            >
+                            </v-btn>
+                        </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card>
+        </v-bottom-sheet>
+</v-container> 
+
+
+    
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import {Component, Prop, Ref, Provide, Watch, Emit} from 'vue-property-decorator'
 
+
 @Component({name:'Account',components:{}})
 export default class Account extends Vue{
+    width: number = 0;
+    height: number = 0;
+    size: number = 0;
+
+
     tab:string = ''
+    colord: boolean = false
     items =  [
                 { tab: 'One', content: '外观' },
                 { tab: 'Two', content: '配色' },
                 { tab: 'Three', content: '计时' }
             ]
+    // 确定点击的是哪一个颜色
+    clickcolorindex: number = null
     bottomlist = [
         {name:'蓝',value:'blue',color:'indigo'},
         {name:'绿',value:'green',color:'green'},
@@ -153,6 +254,88 @@ export default class Account extends Vue{
         {name:'红',value:'red',color:'red'}
         ]
     bottom: string = ''
+
+    facelist = [
+        {name:'蓝',value:'blue',color:'indigo'},
+        {name:'绿',value:'green',color:'green'},
+        {name:'黄',value:'yellow',color:'yellow'},
+        {name:'白',value:'white',color:'white'},
+        {name:'橙',value:'orange',color:'orange'},
+        {name:'红',value:'red',color:'red'}
+        ]
+    facelist2 = [
+        {name:'蓝',value:'blue',color:'blue'},
+        {name:'绿',value:'green',color:'light-green'},
+        {name:'黄',value:'yellow',color:'amber'},
+        {name:'白',value:'white',color:'grey'},
+        {name:'橙',value:'orange',color:'orange'},
+        {name:'红',value:'red',color:'pink'}
+        ]
+
+    stylelist = [
+        ' lighten-4',
+        ' lighten-3',
+        ' lighten-2',
+        ' lighten-1',
+        ' ',
+        ' darken-1',
+        ' darken-2',
+        ' darken-3',
+        ' darken-4',
+    ]
+
+    palette: string[] = [
+        // YELLOW
+        "#FFD600",
+        "#FFFF00",
+        "#FFFF8D",
+        "#FEFE00",
+        "#FDD835",
+        "#FFC107",
+        // ORANGE
+        "#FF6D00",
+        "#FFA100",
+        "#FB8C00",
+        "#F57C00",
+        "#EF6C00",
+        "#E65100",
+        // RED
+        "#B71C1C",
+        "#FF0000",
+        "#EE0000",
+        "#DD0000",
+        "#CC0000",
+        "#BF360C",
+        // BLUE
+        "#0D47A1",
+        "#0000FF",
+        "#88DDFF",
+        "#03A9F4",
+        "#1976D2",
+        "#1A237E",
+        // GREEN
+        "#00A020",
+        "#00FF00",
+        "#76FF03",
+        "#00D800",
+        "#00A000",
+        "#006600",
+        // P
+        "#FF4081",
+        "#EEE8AA",
+        "#FF99FF",
+        "#A83DD9",
+        "#607D8B",
+        "#885500",
+        // WB
+        "#202020",
+        "#000000",
+        "#606060",
+        "#A0A0A0",
+        "#D0D0D0",
+        "#FFFFFF",
+  ];
+
     snackbar: boolean = false
     message: string = ''
     timeout = 2000
@@ -178,18 +361,42 @@ export default class Account extends Vue{
 
         // 不使用sponsor 切换到 示例魔方页面
         this.Switch2CubeSample()
-        
-
     }
+
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.size = Math.ceil(Math.min(this.width / 6, this.height / 12));
+        }
 
     mounted(){
         this.bottom = window.localStorage.getItem('bottomlayer')
+        this.resize()
     }
     setbottomlayer(layername){
         window.localStorage.setItem('bottomlayer', layername)
         this.bottom = layername
         this.snackbar = true
         this.message = `将魔方底色设置为${layername}色`
+    }
+
+    opencolorselect(index){
+        this.colord = true
+        this.clickcolorindex = index
+    }
+
+    setcolor(color){
+        // console.log(color)
+        console.log(this.clickcolorindex)
+        console.log(this.bottomlist)
+        this.bottomlist[this.clickcolorindex].color = color
+        this.colord = false
+    }
+
+    // 选择一种颜色预设
+    setcolorset(oneset){
+        console.log(oneset)
+
     }
 
 }
@@ -206,6 +413,17 @@ export default class Account extends Vue{
 .bottomlayercolor:hover{
     text-align: center;
     height: 100px;
+    transform: scale(0.9);
+}
+.facecolor{
+    text-align: center;
+    height: 30px;
+    align-items: center;
+}
+/* .colorset{
+} */
+.colorset:hover{
+    /* border: 2px solid grey; */
     transform: scale(0.9);
 }
 
