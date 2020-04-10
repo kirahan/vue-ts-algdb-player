@@ -356,6 +356,28 @@ export default class Render extends Vue{
         this.themeconfig.colors[con] = config[con]
         }
         const datajson = JSON.stringify(this.themeconfig)
+        this.theme.load(datajson)
+        this.theme.refresh()
+    }
+
+    resetThemeColors(){
+
+        if(this.cubeconfig.model){
+            let name = 'cubeconfig:' + this.cubeconfig.model
+            let cubeconfig =JSON.parse(window.localStorage.getItem(name))
+            this.themeconfig = cubeconfig.themeconfig 
+        }
+        if(this.cubeconfig.themeModelName){
+            let name = 'theme:' + this.cubeconfig.themeModelName
+            let themeconfig =JSON.parse(window.localStorage.getItem(name))
+            this.themeconfig = themeconfig 
+        }
+        this.theme.load(JSON.stringify(this.themeconfig))
+        this.theme.refresh()
+    }
+
+    saveThemeColors(){
+        const datajson = JSON.stringify(this.themeconfig)
         if(this.cubeconfig.model){
             let name = 'cubeconfig:' + this.cubeconfig.model
             let cubeconfig =JSON.parse(window.localStorage.getItem(name))
@@ -366,8 +388,6 @@ export default class Render extends Vue{
             let name = 'theme:' + this.cubeconfig.themeModelName
             window.localStorage.setItem(name,datajson)
         }
-        this.theme.load(JSON.stringify(this.themeconfig))
-        this.theme.refresh()
     }
 
     resize(width: number, height: number) {

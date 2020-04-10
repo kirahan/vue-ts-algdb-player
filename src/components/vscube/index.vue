@@ -93,8 +93,10 @@
                                         </v-col>
 
 
-                                        <v-col cols=12 class="text-center grey--text">
-                                            <span class="title" style="line-height:20px">预设</span>
+                                        <v-col cols=12 class="preset">
+                                            <span >预设</span>
+                                            <v-btn @click="saveThemeColors" small color="success">确定</v-btn>
+                                            <v-btn @click="resetThemeColors" small color="error">重置</v-btn>
                                         </v-col>
 
                                         <v-row no-gutters>
@@ -361,6 +363,21 @@ export default class Account extends Vue{
         return data
     }
 
+    @Emit('resetthemecolors')
+    resetThemeColors(){
+        this.getlocalstoragecolors()
+        this.snackbar = true
+        this.message = `重置成功`
+        return true
+    }
+
+    @Emit('savethemecolors')
+    saveThemeColors(){
+        this.snackbar = true
+        this.message = `设置颜色成功`
+        return true
+    }
+
 
     @Watch('tab')
     onTabChange(){
@@ -381,25 +398,7 @@ export default class Account extends Vue{
     mounted(){
         this.bottom = window.localStorage.getItem('bottomlayer')
         this.resize()
-
-        let themecolor = JSON.parse(window.localStorage.getItem('cubeconfig:casegroup')).themeconfig.colors
-        // bottomlist = [
-        // {name:'蓝',value:'blue',color:'indigo'},
-        // {name:'绿',value:'green',color:'green'},
-        // {name:'黄',value:'yellow',color:'yellow'},
-        // {name:'白',value:'white',color:'grey lighten-1'},
-        // {name:'橙',value:'orange',color:'orange'},
-        // {name:'红',value:'red',color:'red'}
-        // ]
-        
-        this.bottomlist[0].color = themecolor.B
-        this.bottomlist[1].color = themecolor.F
-        this.bottomlist[2].color = themecolor.U
-        this.bottomlist[3].color = themecolor.D
-        this.bottomlist[4].color = themecolor.L
-        this.bottomlist[5].color = themecolor.R
-
-        console.log(this.bottomlist)
+        this.getlocalstoragecolors()
 
     }
     setbottomlayer(layername){
@@ -414,6 +413,15 @@ export default class Account extends Vue{
         this.clickcolorindex = index
     }
 
+    getlocalstoragecolors(){
+        let themecolor = JSON.parse(window.localStorage.getItem('cubeconfig:casegroup')).themeconfig.colors        
+        this.bottomlist[0].color = themecolor.B
+        this.bottomlist[1].color = themecolor.F
+        this.bottomlist[2].color = themecolor.U
+        this.bottomlist[3].color = themecolor.D
+        this.bottomlist[4].color = themecolor.L
+        this.bottomlist[5].color = themecolor.R
+    }
 
     setcolor(color){
         // console.log(color)
@@ -444,6 +452,8 @@ export default class Account extends Vue{
         }
         this.colord = false
     }
+
+    
 
     // 选择一种颜色预设
     setcolorset(el,oneset){
@@ -496,6 +506,12 @@ export default class Account extends Vue{
 .colorset:hover{
     /* border: 2px solid grey; */
     transform: scale(0.9);
+}
+
+.preset{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
 }
 
 

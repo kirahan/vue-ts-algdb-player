@@ -38,6 +38,8 @@
           <v-subheader>虚拟魔方</v-subheader>
           <Vscube ref="vscube" 
           @setthemecolor="setThemeColors"
+          @resetthemecolors="resetThemeColors"
+          @savethemecolors="saveThemeColors"
           @switch2cubesample="showcubesample=true"></Vscube>
 
           <v-divider></v-divider>
@@ -306,6 +308,14 @@ export default class App extends Vue{
 
   setThemeColors(config){
       this.cubesample.render.setThemeColors(config)
+  }
+
+  resetThemeColors(){
+      this.cubesample.render.resetThemeColors()
+  }
+
+  saveThemeColors(){
+    this.cubesample.render.saveThemeColors()
   }
 
 }
