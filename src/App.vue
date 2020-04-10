@@ -234,7 +234,7 @@ export default class App extends Vue{
     this.$vuetify.theme.dark = false
   }
 
-  setlocalstorage(){
+  initlocalstorage(){
      let temp: CubeCongfig = {
             model: 'casegroup',
             renderModelName: 'casegroup',
@@ -290,19 +290,23 @@ export default class App extends Vue{
       let pre = JSON.stringify(temp.preferanceconfig)
       let the = JSON.stringify(temp.themeconfig)
       let caseg = JSON.stringify(temp)
-      window.localStorage.setItem('theme:casegroup', the)
-      window.localStorage.setItem('render:casegroup', ren)
-      window.localStorage.setItem('preferance:casegroup', pre)
-      window.localStorage.setItem('cubeconfig:casegroup', caseg)
+
+      if(!window.localStorage.getItem('theme:casegroup')){
+        window.localStorage.setItem('theme:casegroup', the)
+      }
+      if(!window.localStorage.getItem('render:casegroup')){
+        window.localStorage.setItem('render:casegroup', ren)
+      }
+      if(!window.localStorage.getItem('preferance:casegroup')){
+        window.localStorage.setItem('preferance:casegroup', pre)
+      }
+      if(!window.localStorage.getItem('cubeconfig:casegroup')){
+        window.localStorage.setItem('cubeconfig:casegroup', caseg)
+      }
   }
 
   mounted(){
-   
-
-      // setTimeout(() => {
-      //   this.sponsorindex = 2
-      //   console.log(this.sponsorindex)
-      // }, 3000);
+   this.initlocalstorage()
   }
 
 

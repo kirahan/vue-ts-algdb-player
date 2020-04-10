@@ -56,6 +56,10 @@
                                                     <v-list-item-title class="caption">{{bottomlayer.name}}</v-list-item-title>
                                             </v-card>
                                         </v-col>
+                                        <v-col cols=12 class="bottombtn">
+                                            <v-btn @click="saveThemeColors"  color="success">确定</v-btn>
+                                            <v-btn @click="resetThemeColors"  color="error">重置</v-btn>
+                                        </v-col>
                                     </v-row>
                                    
                                 </v-expansion-panel-content>
@@ -233,6 +237,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import {Component, Prop, Ref, Provide, Watch, Emit} from 'vue-property-decorator'
+import {COLORS,COLORS_R,COLORS_O,COLORS_G,COLORS_B,COLORS_Y,COLORS_W} from '../../plugins/v4/cuber/define'
 
 
 @Component({name:'Account',components:{}})
@@ -404,8 +409,33 @@ export default class Account extends Vue{
     setbottomlayer(layername){
         window.localStorage.setItem('bottomlayer', layername)
         this.bottom = layername
-        this.snackbar = true
-        this.message = `将魔方底色设置为${layername}色`
+        switch(layername){
+            case '蓝':
+                this.setthemecolor(COLORS_B)
+                break
+            case '绿':
+                this.setthemecolor(COLORS_G)
+                break
+            case '黄':
+                this.setthemecolor(COLORS_Y)
+                break
+            case '白':
+                this.setthemecolor(COLORS_W)
+                break
+            case '橙':
+                this.setthemecolor(COLORS_O)
+                break
+            case '红':
+                this.setthemecolor(COLORS_R)
+                break
+            default:
+                break
+        }
+
+
+
+        // this.snackbar = true
+        // this.message = `将魔方底色设置为${layername}色`
     }
 
     opencolorselect(index){
@@ -424,9 +454,6 @@ export default class Account extends Vue{
     }
 
     setcolor(color){
-        // console.log(color)
-        console.log(this.clickcolorindex)
-        console.log(this.bottomlist)
         this.bottomlist[this.clickcolorindex].color = color
         switch(this.clickcolorindex){
             case 0:
@@ -513,6 +540,10 @@ export default class Account extends Vue{
     justify-content: space-between;
     padding-bottom: 5px;
 }
-
+.bottombtn{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 5px;
+}
 
 </style>
