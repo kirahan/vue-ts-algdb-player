@@ -78,7 +78,7 @@
                                         <v-col cols=10>
                                             <v-row no-gutters>
                                                 <v-col 
-                                                v-for="(bottomlayer,index) in bottomlist"
+                                                v-for="(bottomlayer,index) in colorlist"
                                                 :key="index"
                                                 cols=2
                                                     >
@@ -257,6 +257,14 @@ export default class Account extends Vue{
     // 确定点击的是哪一个颜色
     clickcolorindex: number = null
     bottomlist = [
+        {name:'蓝',value:'blue',color:'indigo'},
+        {name:'绿',value:'green',color:'green'},
+        {name:'黄',value:'yellow',color:'yellow'},
+        {name:'白',value:'white',color:'grey lighten-1'},
+        {name:'橙',value:'orange',color:'orange'},
+        {name:'红',value:'red',color:'red'}
+        ]
+    colorlist = [
         {name:'蓝',value:'blue',color:'indigo'},
         {name:'绿',value:'green',color:'green'},
         {name:'黄',value:'yellow',color:'yellow'},
@@ -445,16 +453,16 @@ export default class Account extends Vue{
 
     getlocalstoragecolors(){
         let themecolor = JSON.parse(window.localStorage.getItem('cubeconfig:casegroup')).themeconfig.colors        
-        this.bottomlist[0].color = themecolor.B
-        this.bottomlist[1].color = themecolor.F
-        this.bottomlist[2].color = themecolor.U
-        this.bottomlist[3].color = themecolor.D
-        this.bottomlist[4].color = themecolor.L
-        this.bottomlist[5].color = themecolor.R
+        this.colorlist[0].color = themecolor.B
+        this.colorlist[1].color = themecolor.F
+        this.colorlist[2].color = themecolor.U
+        this.colorlist[3].color = themecolor.D
+        this.colorlist[4].color = themecolor.L
+        this.colorlist[5].color = themecolor.R
     }
 
     setcolor(color){
-        this.bottomlist[this.clickcolorindex].color = color
+        this.colorlist[this.clickcolorindex].color = color
         switch(this.clickcolorindex){
             case 0:
                 this.setthemecolor({B:color})
@@ -492,7 +500,7 @@ export default class Account extends Vue{
         }
 
         for(let index in colors){
-            this.bottomlist[index].color = colors[index]
+            this.colorlist[index].color = colors[index]
         }
 
         let colorsobj = {

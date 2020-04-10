@@ -1,6 +1,6 @@
 import World from "./cuber/world";
 import CubeGroup from "./cuber/group";
-import vm from ".";
+// import vm from ".";
 import { COLORS } from "./cuber/define";
 import Cubelet from "./cuber/cubelet";
 
@@ -242,7 +242,7 @@ export class Theme {
     if (this.data.dark != value) {
       this.data.dark = value;
     }
-    vm.$vuetify.theme.dark = value;
+    // vm.$vuetify.theme.dark = value;
   }
 }
 

@@ -456,7 +456,8 @@ export default class Render extends Vue{
 
         this.renderer = new WebGLRenderer({
             canvas: this.canvas,
-            antialias: true
+            antialias: true,
+            alpha: true,
         });
 
         this.renderer.autoClear = false;

@@ -128,12 +128,7 @@ export default class Algs extends Vue {
   @Watch("index")
   onIndexChange() {
     let strip: { [face: string]: number[] | undefined } = this.algs[this.index.group].strip;
-<<<<<<< HEAD
-    console.log(strip)
-    cuber.world.cube.strip(strip);
-=======
     this.world.cube.strip(strip);
->>>>>>> 31a0bc659ee86acd054c5c7a8482fc34fc401afe
     this.name = this.algs[this.index.group].algs[this.index.index].name;
     this.origin = this.algs[this.index.group].algs[this.index.index].default;
     let action = window.localStorage.getItem("algs.exp." + this.name);
@@ -142,16 +137,8 @@ export default class Algs extends Vue {
     } else {
       this.action = this.origin;
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-    console.log(this.action)
-    this.player.scene = "^";
-=======
     this.playbar.scene = "^";
->>>>>>> 31a0bc659ee86acd054c5c7a8482fc34fc401afe
-=======
     this.playbar.scene = "x2^";
->>>>>>> 482982ae80ca0d72680d6758a9a776df253bf084
     window.localStorage.setItem("algs.index", JSON.stringify(this.index));
   }
 
